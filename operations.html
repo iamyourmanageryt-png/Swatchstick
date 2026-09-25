@@ -8,104 +8,111 @@
     <!-- Fonts & Icons -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet">
 
     <style>
         :root {
-            --bg-body: #F3F4F6;
+            --bg-body: #FFF9F5;
             --bg-surface: #FFFFFF;
-            --bg-sidebar: #1F2937;
-            --text-main: #111827;
-            --text-muted: #6B7280;
-            --text-light: #F9FAFB;
+            --bg-sidebar: #34252A;
+            --text-main: #34252A;
+            --text-muted: #6E3048;
+            --text-light: #F8DDE5;
             --primary: #9B536F;
-            --primary-hover: #7E4058;
-            --border: #E5E7EB;
+            --primary-hover: #6E3048;
+            --border: #F5C6D4;
             --danger: #EF4444;
             --success: #10B981;
             
-            --radius-md: 8px;
-            --radius-lg: 12px;
-            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            --radius-md: 12px;
+            --radius-lg: 20px;
+            --shadow-sm: 0 4px 12px rgba(155, 83, 111, 0.05);
+            --shadow-md: 0 8px 24px rgba(155, 83, 111, 0.08);
+            --transition: 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Inter', sans-serif; background-color: var(--bg-body); color: var(--text-main); font-size: 14px; }
+        body { font-family: 'DM Sans', sans-serif; background-color: var(--bg-body); color: var(--text-main); font-size: 14px; }
         
-        button { cursor: pointer; border: none; font-family: inherit; }
-        input, select, textarea { font-family: inherit; width: 100%; padding: 10px 12px; border: 1px solid var(--border); border-radius: var(--radius-md); outline: none; transition: border 0.2s; }
-        input:focus, select:focus, textarea:focus { border-color: var(--primary); }
+        button { cursor: pointer; border: none; font-family: inherit; transition: var(--transition); }
+        input, select, textarea { font-family: inherit; width: 100%; padding: 12px 16px; border: 1px solid var(--border); border-radius: var(--radius-md); outline: none; transition: var(--transition); background: var(--bg-surface); }
+        input:focus, select:focus, textarea:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(245, 198, 212, 0.3); }
         
-        .btn { padding: 10px 16px; border-radius: var(--radius-md); font-weight: 500; display: inline-flex; align-items: center; gap: 8px; transition: 0.2s; }
-        .btn-primary { background: var(--primary); color: white; }
-        .btn-primary:hover { background: var(--primary-hover); }
-        .btn-secondary { background: white; border: 1px solid var(--border); color: var(--text-main); }
-        .btn-secondary:hover { background: var(--bg-body); }
+        .btn { padding: 12px 20px; border-radius: 99px; font-weight: 600; display: inline-flex; align-items: center; gap: 8px; font-size: 14px; }
+        .btn-primary { background: linear-gradient(135deg, var(--primary-hover), var(--primary)); color: white; box-shadow: 0 4px 12px rgba(110, 48, 72, 0.2); }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 6px 16px rgba(110, 48, 72, 0.3); }
+        .btn-secondary { background: white; border: 1px solid var(--border); color: var(--primary-hover); }
+        .btn-secondary:hover { background: var(--bg-body); border-color: var(--primary); }
         .btn-danger { background: var(--danger); color: white; }
 
         /* ================= AUTH SCREEN ================= */
-        #auth-screen { position: fixed; inset: 0; background: var(--bg-body); display: flex; align-items: center; justify-content: center; z-index: 1000; }
-        .auth-card { background: white; padding: 40px; border-radius: var(--radius-lg); box-shadow: var(--shadow-md); text-align: center; max-width: 400px; width: 100%; }
-        .auth-card h1 { color: var(--primary); margin-bottom: 8px; font-size: 24px; }
-        .auth-card p { color: var(--text-muted); margin-bottom: 24px; }
+        #auth-screen { position: fixed; inset: 0; background: var(--bg-body); display: flex; align-items: center; justify-content: center; z-index: 1000; animation: fadeIn 0.5s ease; }
+        .auth-card { background: white; padding: 48px 40px; border-radius: var(--radius-lg); box-shadow: var(--shadow-md); text-align: center; max-width: 420px; width: 100%; border: 1px solid rgba(245, 198, 212, 0.5); }
+        .auth-card h1 { color: var(--primary-hover); margin-bottom: 8px; font-size: 28px; font-family: serif; }
+        .auth-card p { color: var(--text-muted); margin-bottom: 32px; font-size: 15px; }
 
         /* ================= LAYOUT ================= */
-        #app-layout { display: none; height: 100vh; overflow: hidden; }
+        #app-layout { display: none; height: 100vh; overflow: hidden; animation: fadeIn 0.5s ease; }
         .sidebar { width: 260px; background: var(--bg-sidebar); color: var(--text-light); display: flex; flex-direction: column; }
-        .sidebar-header { padding: 24px; font-size: 20px; font-weight: 700; border-bottom: 1px solid rgba(255,255,255,0.1); display: flex; align-items: center; gap: 12px; }
-        .nav-menu { flex: 1; padding: 20px 0; display: flex; flex-direction: column; gap: 4px; }
-        .nav-item { padding: 12px 24px; color: #D1D5DB; display: flex; align-items: center; gap: 12px; font-weight: 500; transition: 0.2s; cursor: pointer; }
-        .nav-item:hover, .nav-item.active { background: rgba(255,255,255,0.1); color: white; }
-        .nav-item .material-symbols-rounded { font-size: 20px; }
+        .sidebar-header { padding: 24px; font-size: 22px; font-weight: 700; border-bottom: 1px solid rgba(248, 221, 229, 0.1); display: flex; align-items: center; gap: 12px; font-family: serif; color: white; }
+        .nav-menu { flex: 1; padding: 24px 0; display: flex; flex-direction: column; gap: 8px; }
+        .nav-item { padding: 14px 24px; color: rgba(255,255,255,0.7); display: flex; align-items: center; gap: 12px; font-weight: 500; transition: 0.2s; cursor: pointer; border-left: 3px solid transparent; }
+        .nav-item:hover, .nav-item.active { background: rgba(255,255,255,0.05); color: white; border-left-color: var(--border); }
+        .nav-item .material-symbols-rounded { font-size: 22px; }
         
         .main-content { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
-        .topbar { height: 64px; background: white; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; padding: 0 32px; }
+        .topbar { height: 72px; background: white; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; padding: 0 32px; }
         .content-area { flex: 1; padding: 32px; overflow-y: auto; }
         
         /* ================= VIEWS & CARDS ================= */
-        .view-section { display: none; max-width: 1200px; margin: 0 auto; }
+        .view-section { display: none; max-width: 1200px; margin: 0 auto; animation: slideUp 0.4s ease; }
         .view-section.active { display: block; }
-        .page-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
-        .page-title { font-size: 24px; font-weight: 600; }
+        .page-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 32px; }
+        .page-title { font-size: 28px; font-weight: 700; color: var(--primary-hover); font-family: serif; }
         
-        .card { background: white; border-radius: var(--radius-md); box-shadow: var(--shadow-sm); border: 1px solid var(--border); overflow: hidden; margin-bottom: 24px; }
-        .card-header { padding: 16px 24px; border-bottom: 1px solid var(--border); font-weight: 600; background: #F8FAFC; }
-        .card-body { padding: 24px; }
+        .card { background: white; border-radius: var(--radius-lg); box-shadow: var(--shadow-sm); border: 1px solid var(--border); overflow: hidden; margin-bottom: 24px; }
+        .card-header { padding: 20px 24px; border-bottom: 1px solid var(--border); font-weight: 700; background: var(--bg-body); color: var(--primary-hover); font-size: 16px; text-transform: uppercase; letter-spacing: 0.05em; }
+        .card-body { padding: 32px 24px; }
         
         /* ================= FORMS & TABLES ================= */
-        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-        .form-group { margin-bottom: 16px; }
+        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+        .form-group { margin-bottom: 8px; }
         .form-group.full { grid-column: 1 / -1; }
-        .form-label { display: block; margin-bottom: 6px; font-weight: 500; color: var(--text-main); }
-        .checkbox-label { display: flex; align-items: center; gap: 8px; cursor: pointer; font-weight: 500; }
-        .checkbox-label input { width: auto; }
+        .form-group.third { grid-column: span 1; } /* If changing to 3 cols */
+        .form-label { display: block; margin-bottom: 8px; font-weight: 700; color: var(--text-main); font-size: 13px; text-transform: uppercase; letter-spacing: 0.05em; }
+        .checkbox-label { display: flex; align-items: center; gap: 10px; cursor: pointer; font-weight: 600; padding: 12px; border: 1px solid var(--border); border-radius: var(--radius-md); background: var(--bg-body); transition: var(--transition); }
+        .checkbox-label:hover { background: var(--border); }
+        .checkbox-label input { width: 18px; height: 18px; cursor: pointer; }
         
         table { width: 100%; border-collapse: collapse; text-align: left; }
-        th, td { padding: 12px 24px; border-bottom: 1px solid var(--border); }
-        th { background: #F8FAFC; font-weight: 500; color: var(--text-muted); font-size: 12px; text-transform: uppercase; letter-spacing: 0.05em; }
-        tr:hover { background: #F9FAFB; }
-        .img-cell { width: 40px; height: 40px; border-radius: 4px; object-fit: cover; background: #eee; }
+        th, td { padding: 16px 24px; border-bottom: 1px solid var(--border); }
+        th { background: var(--bg-body); font-weight: 700; color: var(--primary-hover); font-size: 12px; text-transform: uppercase; letter-spacing: 0.05em; }
+        tr:hover { background: var(--bg-body); }
+        .img-cell { width: 48px; height: 48px; border-radius: 8px; object-fit: cover; background: var(--bg-body); border: 1px solid var(--border); }
         
         .action-btns { display: flex; gap: 8px; }
-        .btn-icon { padding: 6px; border-radius: 4px; background: white; border: 1px solid var(--border); color: var(--text-muted); display: inline-flex; }
-        .btn-icon:hover { color: var(--primary); border-color: var(--primary); }
+        .btn-icon { padding: 8px; border-radius: 8px; background: white; border: 1px solid var(--border); color: var(--text-muted); display: inline-flex; transition: var(--transition); }
+        .btn-icon:hover { color: var(--primary); border-color: var(--primary); transform: scale(1.05); }
 
         /* ================= MODALS ================= */
-        .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); display: none; align-items: center; justify-content: center; z-index: 2000; }
-        .modal-overlay.active { display: flex; }
-        .modal { background: white; width: 100%; max-width: 600px; border-radius: var(--radius-lg); box-shadow: var(--shadow-md); max-height: 90vh; display: flex; flex-direction: column; }
-        .modal-header { padding: 20px 24px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; font-weight: 600; font-size: 18px; }
-        .modal-body { padding: 24px; overflow-y: auto; }
-        .modal-footer { padding: 20px 24px; border-top: 1px solid var(--border); display: flex; justify-content: flex-end; gap: 12px; background: #F8FAFC; border-radius: 0 0 var(--radius-lg) var(--radius-lg); }
+        .modal-overlay { position: fixed; inset: 0; background: rgba(52, 37, 42, 0.6); backdrop-filter: blur(4px); display: none; align-items: center; justify-content: center; z-index: 2000; opacity: 0; transition: opacity 0.3s; }
+        .modal-overlay.active { display: flex; opacity: 1; }
+        .modal { background: white; width: 100%; max-width: 800px; border-radius: var(--radius-lg); box-shadow: var(--shadow-lg); max-height: 90vh; display: flex; flex-direction: column; transform: scale(0.95); transition: transform 0.3s; }
+        .modal-overlay.active .modal { transform: scale(1); }
+        .modal-header { padding: 24px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; font-weight: 700; font-size: 22px; font-family: serif; color: var(--primary-hover); }
+        .modal-body { padding: 32px 24px; overflow-y: auto; }
+        .modal-footer { padding: 20px 24px; border-top: 1px solid var(--border); display: flex; justify-content: flex-end; gap: 12px; background: var(--bg-body); border-radius: 0 0 var(--radius-lg) var(--radius-lg); }
 
-        /* ================= TOASTS ================= */
-        #toast-container { position: fixed; bottom: 24px; right: 24px; z-index: 9999; display: flex; flex-direction: column; gap: 10px; }
-        .toast { padding: 12px 20px; border-radius: var(--radius-md); color: white; display: flex; align-items: center; gap: 8px; font-weight: 500; box-shadow: var(--shadow-md); animation: slideIn 0.3s forwards; }
-        .toast.success { background: var(--success); }
+        /* ================= TOASTS & ANIMATIONS ================= */
+        #toast-container { position: fixed; bottom: 32px; right: 32px; z-index: 9999; display: flex; flex-direction: column; gap: 12px; }
+        .toast { padding: 14px 24px; border-radius: 99px; color: white; display: flex; align-items: center; gap: 10px; font-weight: 600; box-shadow: var(--shadow-md); animation: slideInRight 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
+        .toast.success { background: var(--primary-hover); }
         .toast.error { background: var(--danger); }
-        @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+        
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes slideInRight { from { transform: translateX(120%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
     </style>
 </head>
 <body>
@@ -113,22 +120,22 @@
     <!-- AUTH SCREEN -->
     <div id="auth-screen">
         <div class="auth-card">
-            <span class="material-symbols-rounded" style="font-size: 48px; color: var(--primary); margin-bottom: 16px;">admin_panel_settings</span>
+            <span class="material-symbols-rounded" style="font-size: 56px; color: var(--primary); margin-bottom: 16px;">admin_panel_settings</span>
             <h1>SwatchStick Ops</h1>
-            <p>Admin Operations Panel</p>
-            <button class="btn btn-primary" id="btn-one-tap" style="width: 100%; justify-content: center; font-size: 16px; padding: 12px;">
-                <span class="material-symbols-rounded">login</span> One-Tap Sign In
+            <p>Admin Dashboard & Content Management</p>
+            <button class="btn btn-primary" id="btn-one-tap" style="width: 100%; justify-content: center; font-size: 16px; padding: 14px;">
+                <span class="material-symbols-rounded">login</span> Authenticate
             </button>
-            <p style="font-size: 12px; margin-top: 16px; opacity: 0.7;">Instant authenticated access</p>
+            <p style="font-size: 12px; margin-top: 24px; opacity: 0.6;">Secure one-tap access</p>
         </div>
     </div>
 
     <!-- MAIN DASHBOARD -->
-    <div id="app-layout" style="display: flex;">
+    <div id="app-layout">
         <!-- Sidebar -->
         <aside class="sidebar">
             <div class="sidebar-header">
-                <span class="material-symbols-rounded" style="color: var(--primary);">tune</span>
+                <span class="material-symbols-rounded" style="color: var(--primary);">auto_awesome</span>
                 SwatchOps
             </div>
             <nav class="nav-menu">
@@ -153,8 +160,11 @@
         <!-- Main Content -->
         <main class="main-content">
             <header class="topbar">
-                <div style="font-weight: 500; color: var(--text-muted);">Database: <span style="color: var(--success); font-weight: 600;">designsnap-f3309</span></div>
-                <button class="btn btn-secondary" id="btn-logout" style="padding: 6px 12px; font-size: 13px;">
+                <div style="font-weight: 600; color: var(--text-muted); display: flex; align-items: center; gap: 8px;">
+                    <span class="material-symbols-rounded" style="color: var(--success); font-size: 18px;">cloud_done</span>
+                    Connected to <span style="color: var(--primary-hover);">designsnap-f3309</span>
+                </div>
+                <button class="btn btn-secondary" id="btn-logout" style="padding: 8px 16px;">
                     <span class="material-symbols-rounded" style="font-size: 18px;">logout</span> Exit
                 </button>
             </header>
@@ -183,7 +193,7 @@
                                 <input type="text" id="set-tagline" placeholder="Discover real swatches...">
                             </div>
                             <div class="form-group full">
-                                <label class="form-label">Logo URL (Leave blank for default text logo)</label>
+                                <label class="form-label">Logo URL (Leave blank for text logo)</label>
                                 <input type="text" id="set-logoUrl" placeholder="https://...">
                             </div>
                             <div class="form-group">
@@ -217,7 +227,7 @@
                                 </label>
                             </div>
                             <div class="form-group">
-                                <label class="form-label">Eyebrow (Small uppercase text)</label>
+                                <label class="form-label">Eyebrow (Small caps text)</label>
                                 <input type="text" id="hero-eyebrow" placeholder="REAL BEAUTY">
                             </div>
                             <div class="form-group">
@@ -230,7 +240,7 @@
                             </div>
                             <div class="form-group">
                                 <label class="form-label">Button Text</label>
-                                <input type="text" id="hero-btnText" placeholder="Explore swatches">
+                                <input type="text" id="hero-btnText" placeholder="Discover Shades">
                             </div>
                             <div class="form-group">
                                 <label class="form-label">Button Link</label>
@@ -267,13 +277,13 @@
                 <!-- VIEW: PRODUCTS -->
                 <div id="view-products" class="view-section">
                     <div class="page-header">
-                        <h2 class="page-title">Products</h2>
+                        <h2 class="page-title">Products Directory</h2>
                         <button class="btn btn-primary" onclick="openModal('modal-product')"><span class="material-symbols-rounded">add</span> Add Product</button>
                     </div>
                     <div class="card">
                         <table id="table-products">
                             <thead>
-                                <tr><th>Image</th><th>Brand</th><th>Product Name</th><th>Category</th><th>Stats</th><th>Status</th><th>Actions</th></tr>
+                                <tr><th>Image</th><th>Brand</th><th>Product Name</th><th>Category</th><th>Stats (Likes/Views)</th><th>Status</th><th>Actions</th></tr>
                             </thead>
                             <tbody></tbody>
                         </table>
@@ -289,7 +299,7 @@
                     <div class="card">
                         <table id="table-swatches">
                             <thead>
-                                <tr><th>Image</th><th>Product</th><th>Shade</th><th>Skin / Undertone</th><th>Status</th><th>Actions</th></tr>
+                                <tr><th>Image</th><th>Product</th><th>Shade</th><th>Skin / Undertone</th><th>Stats (Likes)</th><th>Status</th><th>Actions</th></tr>
                             </thead>
                             <tbody></tbody>
                         </table>
@@ -304,7 +314,7 @@
 
     <!-- Category Modal -->
     <div class="modal-overlay" id="modal-category">
-        <div class="modal">
+        <div class="modal" style="max-width: 500px;">
             <div class="modal-header">
                 <span id="cat-modal-title">Add Category</span>
                 <button class="btn-icon" onclick="closeModal('modal-category')"><span class="material-symbols-rounded">close</span></button>
@@ -313,13 +323,13 @@
                 <input type="hidden" id="cat-id">
                 <div class="form-group full">
                     <label class="form-label">Category Name</label>
-                    <input type="text" id="cat-name" placeholder="e.g. Lip">
+                    <input type="text" id="cat-name" placeholder="e.g. Lips">
                 </div>
-                <div class="form-group">
+                <div class="form-group full">
                     <label class="form-label">Slug (URL friendly)</label>
-                    <input type="text" id="cat-slug" placeholder="e.g. lip">
+                    <input type="text" id="cat-slug" placeholder="e.g. lips">
                 </div>
-                <div class="form-group">
+                <div class="form-group full">
                     <label class="form-label">Display Order</label>
                     <input type="number" id="cat-order" value="1">
                 </div>
@@ -334,9 +344,9 @@
         </div>
     </div>
 
-    <!-- Product Modal -->
+    <!-- Product Modal (Enhanced) -->
     <div class="modal-overlay" id="modal-product">
-        <div class="modal" style="max-width: 800px;">
+        <div class="modal" style="max-width: 900px;">
             <div class="modal-header">
                 <span id="prod-modal-title">Add Product</span>
                 <button class="btn-icon" onclick="closeModal('modal-product')"><span class="material-symbols-rounded">close</span></button>
@@ -361,26 +371,47 @@
                     <label class="form-label">Specific Shade (Optional)</label>
                     <input type="text" id="prod-shade" placeholder="e.g. Fenty Glow">
                 </div>
+                
                 <div class="form-group full">
-                    <label class="form-label">Image URL</label>
-                    <input type="text" id="prod-img" placeholder="https://...">
+                    <label class="form-label">Image URLs (One per line for multiple images)</label>
+                    <textarea id="prod-imgs" rows="3" placeholder="https://image1.jpg&#10;https://image2.jpg"></textarea>
                 </div>
                 <div class="form-group full">
                     <label class="form-label">Description</label>
-                    <textarea id="prod-desc" rows="3"></textarea>
+                    <textarea id="prod-desc" rows="4"></textarea>
                 </div>
                 <div class="form-group">
-                    <label class="form-label">Price (String, e.g. $21.00)</label>
-                    <input type="text" id="prod-price">
+                    <label class="form-label">Price (Enter number for ₹)</label>
+                    <input type="text" id="prod-price" placeholder="e.g. 1500">
                 </div>
                 <div class="form-group">
                     <label class="form-label">External Purchase URL</label>
-                    <input type="text" id="prod-url">
+                    <input type="text" id="prod-url" placeholder="https://...">
                 </div>
-                <div class="form-group full" style="display: flex; gap: 24px; padding: 12px; background: #F8FAFC; border-radius: 8px;">
-                    <label class="checkbox-label"><input type="checkbox" id="prod-visible" checked> Visible</label>
-                    <label class="checkbox-label"><input type="checkbox" id="prod-trending"> Trending</label>
-                    <label class="checkbox-label"><input type="checkbox" id="prod-featured"> Featured</label>
+
+                <!-- Manual Stat Editing -->
+                <div class="form-group full" style="border-top: 1px solid var(--border); padding-top: 16px;">
+                    <label class="form-label" style="color:var(--primary)">Manual Stat Overrides</label>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px;">
+                        <div>
+                            <label class="form-label">Likes</label>
+                            <input type="number" id="prod-likes" value="0">
+                        </div>
+                        <div>
+                            <label class="form-label">Views</label>
+                            <input type="number" id="prod-views" value="0">
+                        </div>
+                        <div>
+                            <label class="form-label">Total Saves/Wishlisted</label>
+                            <input type="number" id="prod-saves" value="0" title="Informational stat">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group full" style="display: flex; gap: 16px; padding: 16px; background: var(--bg-body); border-radius: var(--radius-md); border: 1px solid var(--border);">
+                    <label class="checkbox-label" style="flex:1;"><input type="checkbox" id="prod-visible" checked> Visible</label>
+                    <label class="checkbox-label" style="flex:1;"><input type="checkbox" id="prod-trending"> Trending</label>
+                    <label class="checkbox-label" style="flex:1;"><input type="checkbox" id="prod-featured"> Featured</label>
                 </div>
             </div>
             <div class="modal-footer">
@@ -390,9 +421,9 @@
         </div>
     </div>
 
-    <!-- Swatch Modal -->
+    <!-- Swatch Modal (Enhanced) -->
     <div class="modal-overlay" id="modal-swatch">
-        <div class="modal">
+        <div class="modal" style="max-width: 800px;">
             <div class="modal-header">
                 <span id="swatch-modal-title">Add Swatch</span>
                 <button class="btn-icon" onclick="closeModal('modal-swatch')"><span class="material-symbols-rounded">close</span></button>
@@ -406,11 +437,11 @@
                     </select>
                 </div>
                 <div class="form-group full">
-                    <label class="form-label">Swatch Image URL</label>
-                    <input type="text" id="swatch-img" placeholder="https://...">
+                    <label class="form-label">Swatch Image URLs (One per line)</label>
+                    <textarea id="swatch-imgs" rows="3" placeholder="https://swatch1.jpg&#10;https://swatch2.jpg"></textarea>
                 </div>
                 <div class="form-group">
-                    <label class="form-label">Shade/Color Name</label>
+                    <label class="form-label">Shade / Color Name</label>
                     <input type="text" id="swatch-shade">
                 </div>
                 <div class="form-group">
@@ -444,12 +475,28 @@
                         <option value="Flash">Flash</option>
                     </select>
                 </div>
+                
+                <!-- Manual Stat Editing for Swatch -->
+                <div class="form-group full" style="border-top: 1px solid var(--border); padding-top: 16px;">
+                    <label class="form-label" style="color:var(--primary)">Manual Stat Overrides</label>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+                        <div>
+                            <label class="form-label">Likes</label>
+                            <input type="number" id="swatch-likes" value="0">
+                        </div>
+                        <div>
+                            <label class="form-label">Views</label>
+                            <input type="number" id="swatch-views" value="0">
+                        </div>
+                    </div>
+                </div>
+
                 <div class="form-group full">
-                    <label class="form-label">Notes</label>
-                    <textarea id="swatch-notes" rows="2" placeholder="Formula notes, wear test results, texture..."></textarea>
+                    <label class="form-label">Notes / Review</label>
+                    <textarea id="swatch-notes" rows="3" placeholder="Formula notes, wear test results, texture..."></textarea>
                 </div>
                 <div class="form-group full">
-                    <label class="checkbox-label"><input type="checkbox" id="swatch-visible" checked> Visible</label>
+                    <label class="checkbox-label"><input type="checkbox" id="swatch-visible" checked> Visible to Public</label>
                 </div>
             </div>
             <div class="modal-footer">
@@ -459,8 +506,6 @@
         </div>
     </div>
 
-    <div id="toast-container"></div>
-
     <!-- ================= JAVASCRIPT ================= -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
@@ -468,7 +513,7 @@
         import { getFirestore, collection, doc, getDoc, getDocs, setDoc, addDoc, updateDoc, deleteDoc, increment, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
         import { getDatabase } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-database.js";
 
-        // Updated Firebase Configuration
+        // Required Firebase Configuration
         const firebaseConfig = {
             apiKey: "AIzaSyAZ_c3EaDxSZ6RrNrwQjR_TauJHrPfk_lk",
             authDomain: "designsnap-f3309.firebaseapp.com",
@@ -494,51 +539,44 @@
             t.className = `toast ${type}`;
             t.innerHTML = `<span class="material-symbols-rounded">${type === 'success' ? 'check_circle' : 'error'}</span> ${msg}`;
             c.appendChild(t);
-            setTimeout(() => t.remove(), 3000);
+            setTimeout(() => { t.style.animation = 'fadeOut 0.3s forwards'; setTimeout(() => t.remove(), 300); }, 3000);
         };
 
+        // Modal Helpers
         window.openModal = (id) => {
-            document.getElementById(id).classList.add('active');
+            const el = document.getElementById(id);
+            el.style.display = 'flex';
+            setTimeout(() => el.classList.add('active'), 10);
+            
             if (id === 'modal-category') {
-                document.getElementById('cat-id').value = '';
-                document.getElementById('cat-name').value = '';
-                document.getElementById('cat-slug').value = '';
-                document.getElementById('cat-order').value = '1';
-                document.getElementById('cat-visible').checked = true;
+                document.getElementById('cat-id').value = ''; document.getElementById('cat-name').value = ''; document.getElementById('cat-slug').value = '';
+                document.getElementById('cat-order').value = '1'; document.getElementById('cat-visible').checked = true;
                 document.getElementById('cat-modal-title').innerText = 'Add Category';
             }
             if (id === 'modal-product') {
-                document.getElementById('prod-id').value = '';
-                document.getElementById('prod-brand').value = '';
-                document.getElementById('prod-name').value = '';
-                document.getElementById('prod-category').value = '';
-                document.getElementById('prod-shade').value = '';
-                document.getElementById('prod-img').value = '';
-                document.getElementById('prod-desc').value = '';
-                document.getElementById('prod-price').value = '';
-                document.getElementById('prod-url').value = '';
-                document.getElementById('prod-visible').checked = true;
-                document.getElementById('prod-trending').checked = false;
-                document.getElementById('prod-featured').checked = false;
+                document.getElementById('prod-id').value = ''; document.getElementById('prod-brand').value = ''; document.getElementById('prod-name').value = '';
+                document.getElementById('prod-category').value = ''; document.getElementById('prod-shade').value = ''; document.getElementById('prod-imgs').value = '';
+                document.getElementById('prod-desc').value = ''; document.getElementById('prod-price').value = ''; document.getElementById('prod-url').value = '';
+                document.getElementById('prod-likes').value = '0'; document.getElementById('prod-views').value = '0'; document.getElementById('prod-saves').value = '0';
+                document.getElementById('prod-visible').checked = true; document.getElementById('prod-trending').checked = false; document.getElementById('prod-featured').checked = false;
                 document.getElementById('prod-modal-title').innerText = 'Add Product';
             }
             if (id === 'modal-swatch') {
-                document.getElementById('swatch-id').value = '';
-                document.getElementById('swatch-product').value = '';
-                document.getElementById('swatch-img').value = '';
-                document.getElementById('swatch-shade').value = '';
-                document.getElementById('swatch-skin').value = '';
-                document.getElementById('swatch-undertone').value = '';
-                document.getElementById('swatch-light').value = '';
-                document.getElementById('swatch-notes').value = '';
-                document.getElementById('swatch-visible').checked = true;
-                document.getElementById('swatch-modal-title').innerText = 'Add Swatch';
+                document.getElementById('swatch-id').value = ''; document.getElementById('swatch-product').value = ''; document.getElementById('swatch-imgs').value = '';
+                document.getElementById('swatch-shade').value = ''; document.getElementById('swatch-skin').value = ''; document.getElementById('swatch-undertone').value = '';
+                document.getElementById('swatch-light').value = ''; document.getElementById('swatch-notes').value = ''; 
+                document.getElementById('swatch-likes').value = '0'; document.getElementById('swatch-views').value = '0';
+                document.getElementById('swatch-visible').checked = true; document.getElementById('swatch-modal-title').innerText = 'Add Swatch';
             }
         };
 
-        window.closeModal = (id) => document.getElementById(id).classList.remove('active');
+        window.closeModal = (id) => {
+            const el = document.getElementById(id);
+            el.classList.remove('active');
+            setTimeout(() => el.style.display = 'none', 300);
+        };
 
-        // Navigation Menu
+        // Navigation
         document.querySelectorAll('.nav-item').forEach(el => {
             el.addEventListener('click', () => {
                 document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
@@ -549,15 +587,11 @@
             });
         });
 
-        // Auth Operations
+        // Authentication
         document.getElementById('btn-one-tap').addEventListener('click', async () => {
-            try {
-                await signInAnonymously(auth);
-            } catch(e) { 
-                window.showToast("Authentication failed: " + e.message, "error"); 
-            }
+            try { await signInAnonymously(auth); } 
+            catch(e) { window.showToast("Auth failed: " + e.message, "error"); }
         });
-
         document.getElementById('btn-logout').addEventListener('click', () => signOut(auth));
 
         onAuthStateChanged(auth, (user) => {
@@ -575,14 +609,8 @@
             if (viewId === 'view-settings') await fetchSettings();
             if (viewId === 'view-hero') await fetchHero();
             if (viewId === 'view-categories') await fetchCategories();
-            if (viewId === 'view-products') { 
-                await fetchCategoriesForDropdown(); 
-                await fetchProducts(); 
-            }
-            if (viewId === 'view-swatches') { 
-                await fetchProductsForDropdown(); 
-                await fetchSwatches(); 
-            }
+            if (viewId === 'view-products') { await fetchCategoriesForDropdown(); await fetchProducts(); }
+            if (viewId === 'view-swatches') { await fetchProductsForDropdown(); await fetchSwatches(); }
         }
 
         // ================= SITE SETTINGS =================
@@ -599,7 +627,7 @@
                     document.getElementById('set-tiktokUrl').value = d.tiktokUrl || '';
                     document.getElementById('set-pinterestUrl').value = d.pinterestUrl || '';
                 }
-            } catch(e) { console.error(e); }
+            } catch(e) {}
         }
 
         document.getElementById('btn-save-settings').addEventListener('click', async () => {
@@ -614,9 +642,7 @@
                     pinterestUrl: document.getElementById('set-pinterestUrl').value
                 }, { merge: true });
                 window.showToast("Settings saved successfully!");
-            } catch(e) { 
-                window.showToast("Error saving settings", "error"); 
-            }
+            } catch(e) { window.showToast("Error saving", "error"); }
         });
 
         // ================= HERO =================
@@ -634,7 +660,7 @@
                     document.getElementById('hero-img').value = d.imageUrl || '';
                     document.getElementById('hero-secImg').value = d.secondaryImageUrl || '';
                 }
-            } catch(e) { console.error(e); }
+            } catch(e) {}
         }
 
         document.getElementById('btn-save-hero').addEventListener('click', async () => {
@@ -650,9 +676,7 @@
                     secondaryImageUrl: document.getElementById('hero-secImg').value
                 }, { merge: true });
                 window.showToast("Hero section saved!");
-            } catch(e) { 
-                window.showToast("Error saving hero", "error"); 
-            }
+            } catch(e) { window.showToast("Error saving", "error"); }
         });
 
         // ================= CATEGORIES =================
@@ -665,10 +689,10 @@
                     const data = d.data();
                     categoriesData.push({id: d.id, ...data});
                     html += `<tr>
-                        <td style="font-weight:500;">${data.name || 'Unnamed'}</td>
+                        <td style="font-weight:700; font-size:15px; color:var(--primary-hover)">${data.name || 'Unnamed'}</td>
                         <td style="color:var(--text-muted)">${data.slug || ''}</td>
-                        <td>${data.order || 0}</td>
-                        <td>${data.visible ? '<span style="color:var(--success)">Visible</span>' : '<span style="color:var(--text-muted)">Hidden</span>'}</td>
+                        <td><span style="background:var(--bg-body); padding:4px 12px; border-radius:12px; font-weight:600;">${data.order || 0}</span></td>
+                        <td>${data.visible ? '<span style="color:var(--success); font-weight:600;">Visible</span>' : '<span style="color:var(--danger); font-weight:600;">Hidden</span>'}</td>
                         <td class="action-btns">
                             <button class="btn-icon" onclick="window.editCategory('${d.id}')"><span class="material-symbols-rounded">edit</span></button>
                             <button class="btn-icon" style="color:var(--danger)" onclick="window.delDoc('categories', '${d.id}', fetchCategories)"><span class="material-symbols-rounded">delete</span></button>
@@ -676,7 +700,7 @@
                     </tr>`;
                 });
                 document.querySelector('#table-categories tbody').innerHTML = html;
-            } catch(e) { console.error(e); }
+            } catch(e) {}
         }
 
         window.editCategory = (id) => {
@@ -700,26 +724,19 @@
                 visible: document.getElementById('cat-visible').checked
             };
             try {
-                if (id) { 
-                    await updateDoc(doc(db, "categories", id), data); 
-                } else { 
-                    await addDoc(collection(db, "categories"), data); 
-                }
+                if (id) { await updateDoc(doc(db, "categories", id), data); } 
+                else { await addDoc(collection(db, "categories"), data); }
                 window.showToast("Category saved");
                 window.closeModal('modal-category');
                 fetchCategories();
-            } catch(e) { 
-                window.showToast("Error saving category", "error"); 
-            }
+            } catch(e) { window.showToast("Error saving", "error"); }
         });
 
         // ================= PRODUCTS =================
         async function fetchCategoriesForDropdown() {
             const snap = await getDocs(collection(db, "categories"));
             let html = '<option value="">Select Category...</option>';
-            snap.forEach(d => {
-                html += `<option value="${d.data().slug || d.data().name}">${d.data().name}</option>`;
-            });
+            snap.forEach(d => { html += `<option value="${d.data().slug || d.data().name}">${d.data().name}</option>`; });
             document.getElementById('prod-category').innerHTML = html;
         }
 
@@ -731,15 +748,21 @@
                 snap.forEach(d => {
                     const data = d.data();
                     productsData.push({id: d.id, ...data});
+                    // Fallback to imageUrl if array not present
+                    const displayImg = (data.imageUrls && data.imageUrls.length > 0) ? data.imageUrls[0] : (data.imageUrl || '');
+                    
                     html += `<tr>
-                        <td><img src="${data.imageUrl || ''}" class="img-cell" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMCIgaGVpZ2h0PSIzMCI+PHJlY3Qgd2lkdGg9IjMwIiBoZWlnaHQ9IjMwIiBmaWxsPSIjZWVlIi8+PC9zdmc+'"></td>
-                        <td>${data.brand || ''}</td>
-                        <td style="font-weight:500;">${data.name || ''}<div style="font-size:11px;color:var(--text-muted);font-weight:400">${data.shade || ''}</div></td>
-                        <td>${data.category || ''}</td>
-                        <td style="font-size:12px; color:var(--text-muted)">♥ ${data.likes || 0} | 👁 ${data.views || 0} | 🎨 ${data.swatchCount || 0}</td>
+                        <td><img src="${displayImg}" class="img-cell" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMCIgaGVpZ2h0PSIzMCI+PHJlY3Qgd2lkdGg9IjMwIiBoZWlnaHQ9IjMwIiBmaWxsPSIjZWVlIi8+PC9zdmc+'"></td>
+                        <td style="font-weight:600; font-size:12px; text-transform:uppercase; color:var(--primary);">${data.brand || ''}</td>
+                        <td style="font-weight:700; font-size:15px; color:var(--primary-hover);">${data.name || ''}<div style="font-size:12px;color:var(--text-muted);font-weight:500; margin-top:2px;">${data.shade || ''}</div></td>
+                        <td><span style="background:var(--bg-body); padding:4px 12px; border-radius:12px; font-weight:600; font-size:12px;">${data.category || ''}</span></td>
+                        <td style="font-size:13px; font-weight:600; color:var(--text-muted)">
+                            <span style="color:var(--primary)">♥</span> ${data.likes || 0} &nbsp;&nbsp; 
+                            <span style="color:var(--primary)">👁</span> ${data.views || 0}
+                        </td>
                         <td>
-                            ${data.visible ? '<span style="color:var(--success); font-size:12px">Visible</span>' : '<span style="color:var(--text-muted); font-size:12px">Hidden</span>'}
-                            ${data.trending ? '<br><span style="color:var(--primary); font-size:11px">Trending</span>' : ''}
+                            ${data.visible ? '<span style="color:var(--success); font-weight:600; font-size:12px">Visible</span>' : '<span style="color:var(--danger); font-weight:600; font-size:12px">Hidden</span>'}
+                            ${data.trending ? '<br><span style="color:var(--primary); font-weight:700; font-size:11px; background:var(--bg-body); padding:2px 8px; border-radius:8px; display:inline-block; margin-top:4px;">Trending</span>' : ''}
                         </td>
                         <td class="action-btns">
                             <button class="btn-icon" onclick="window.editProduct('${d.id}')"><span class="material-symbols-rounded">edit</span></button>
@@ -748,7 +771,7 @@
                     </tr>`;
                 });
                 document.querySelector('#table-products tbody').innerHTML = html;
-            } catch(e) { console.error(e); }
+            } catch(e) {}
         }
 
         window.editProduct = (id) => {
@@ -759,50 +782,67 @@
             document.getElementById('prod-name').value = p.name || '';
             document.getElementById('prod-category').value = p.category || '';
             document.getElementById('prod-shade').value = p.shade || '';
-            document.getElementById('prod-img').value = p.imageUrl || '';
             document.getElementById('prod-desc').value = p.description || '';
             document.getElementById('prod-price').value = p.price || '';
             document.getElementById('prod-url').value = p.productUrl || '';
+            
+            // Multiple images handling
+            let urlsText = '';
+            if(p.imageUrls && p.imageUrls.length > 0) urlsText = p.imageUrls.join('\n');
+            else if(p.imageUrl) urlsText = p.imageUrl;
+            document.getElementById('prod-imgs').value = urlsText;
+
+            // Stats handling
+            document.getElementById('prod-likes').value = p.likes || 0;
+            document.getElementById('prod-views').value = p.views || 0;
+            document.getElementById('prod-saves').value = p.saves || 0;
+
             document.getElementById('prod-visible').checked = p.visible !== false;
             document.getElementById('prod-trending').checked = p.trending === true;
             document.getElementById('prod-featured').checked = p.featured === true;
+            
             document.getElementById('prod-modal-title').innerText = 'Edit Product';
             window.openModal('modal-product');
         };
 
         document.getElementById('btn-save-product').addEventListener('click', async () => {
             const id = document.getElementById('prod-id').value;
+            
+            // Parse multiple images
+            const rawUrls = document.getElementById('prod-imgs').value.split('\n');
+            const imageUrls = rawUrls.map(u => u.trim()).filter(u => u !== '');
+            const primaryImg = imageUrls.length > 0 ? imageUrls[0] : '';
+
             const data = {
                 brand: document.getElementById('prod-brand').value,
                 name: document.getElementById('prod-name').value,
                 category: document.getElementById('prod-category').value,
                 shade: document.getElementById('prod-shade').value,
-                imageUrl: document.getElementById('prod-img').value,
+                imageUrls: imageUrls,
+                imageUrl: primaryImg, // Fallback for old schema
                 description: document.getElementById('prod-desc').value,
                 price: document.getElementById('prod-price').value,
                 productUrl: document.getElementById('prod-url').value,
+                likes: parseInt(document.getElementById('prod-likes').value) || 0,
+                views: parseInt(document.getElementById('prod-views').value) || 0,
+                saves: parseInt(document.getElementById('prod-saves').value) || 0,
                 visible: document.getElementById('prod-visible').checked,
                 trending: document.getElementById('prod-trending').checked,
                 featured: document.getElementById('prod-featured').checked,
                 updatedAt: serverTimestamp()
             };
+
             try {
-                if (id) { 
-                    await updateDoc(doc(db, "products", id), data); 
-                } else {
+                if (id) { await updateDoc(doc(db, "products", id), data); } 
+                else {
                     data.createdAt = serverTimestamp();
-                    data.likes = 0; 
-                    data.views = 0; 
-                    data.swatchCount = 0; 
-                    data.commentsCount = 0;
+                    data.swatchCount = 0; data.commentsCount = 0;
                     await addDoc(collection(db, "products"), data);
                 }
                 window.showToast("Product saved");
                 window.closeModal('modal-product');
                 fetchProducts();
-            } catch(e) { 
-                window.showToast("Error saving product", "error"); 
-            }
+            } catch(e) { window.showToast("Error saving product", "error"); }
         });
 
         // ================= SWATCHES =================
@@ -820,67 +860,112 @@
             try {
                 const snap = await getDocs(collection(db, "swatches"));
                 let html = '';
-                
                 const pMap = {};
                 productsData.forEach(p => pMap[p.id] = `${p.brand} ${p.name}`);
 
                 snap.forEach(d => {
                     const data = d.data();
                     const pName = pMap[data.productId] || 'Unknown Product';
+                    const displayImg = (data.imageUrls && data.imageUrls.length > 0) ? data.imageUrls[0] : (data.imageUrl || '');
+
                     html += `<tr>
-                        <td><img src="${data.imageUrl || ''}" class="img-cell" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMCIgaGVpZ2h0PSIzMCI+PHJlY3Qgd2lkdGg9IjMwIiBoZWlnaHQ9IjMwIiBmaWxsPSIjZWVlIi8+PC9zdmc+'"></td>
-                        <td><div style="max-width:180px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;" title="${pName}">${pName}</div></td>
-                        <td>${data.shade || '-'}</td>
-                        <td style="font-size:12px;">${data.skinTone || '-'} / ${data.undertone || '-'}</td>
-                        <td>${data.visible ? '<span style="color:var(--success); font-size:12px">Visible</span>' : '<span style="color:var(--text-muted); font-size:12px">Hidden</span>'}</td>
+                        <td><img src="${displayImg}" class="img-cell" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMCIgaGVpZ2h0PSIzMCI+PHJlY3Qgd2lkdGg9IjMwIiBoZWlnaHQ9IjMwIiBmaWxsPSIjZWVlIi8+PC9zdmc+'"></td>
+                        <td><div style="max-width:200px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; font-weight:700; color:var(--primary-hover);" title="${pName}">${pName}</div></td>
+                        <td style="font-weight:600;">${data.shade || '-'}</td>
+                        <td><span style="background:var(--bg-body); padding:4px 12px; border-radius:12px; font-weight:600; font-size:12px;">${data.skinTone || '-'} / ${data.undertone || '-'}</span></td>
+                        <td style="font-size:13px; font-weight:600; color:var(--text-muted)"><span style="color:var(--primary)">♥</span> ${data.likes || 0}</td>
+                        <td>${data.visible ? '<span style="color:var(--success); font-weight:600; font-size:12px">Visible</span>' : '<span style="color:var(--danger); font-weight:600; font-size:12px">Hidden</span>'}</td>
                         <td class="action-btns">
+                            <button class="btn-icon" onclick="window.editSwatch('${d.id}')"><span class="material-symbols-rounded">edit</span></button>
                             <button class="btn-icon" style="color:var(--danger)" onclick="window.delDoc('swatches', '${d.id}', fetchSwatches)"><span class="material-symbols-rounded">delete</span></button>
                         </td>
                     </tr>`;
                 });
                 document.querySelector('#table-swatches tbody').innerHTML = html;
-            } catch(e) { console.error(e); }
+            } catch(e) {}
         }
 
+        let currentSwatchesData = []; // To hold data for edit
+        async function populateSwatchesData() {
+            const snap = await getDocs(collection(db, "swatches"));
+            currentSwatchesData = [];
+            snap.forEach(d => currentSwatchesData.push({id: d.id, ...d.data()}));
+        }
+
+        window.editSwatch = async (id) => {
+            if(currentSwatchesData.length === 0) await populateSwatchesData();
+            const s = currentSwatchesData.find(x => x.id === id);
+            if(!s) return;
+
+            document.getElementById('swatch-id').value = s.id;
+            document.getElementById('swatch-product').value = s.productId || '';
+            document.getElementById('swatch-shade').value = s.shade || '';
+            document.getElementById('swatch-skin').value = s.skinTone || '';
+            document.getElementById('swatch-undertone').value = s.undertone || '';
+            document.getElementById('swatch-light').value = s.lighting || '';
+            document.getElementById('swatch-notes').value = s.notes || '';
+            
+            let urlsText = '';
+            if(s.imageUrls && s.imageUrls.length > 0) urlsText = s.imageUrls.join('\n');
+            else if(s.imageUrl) urlsText = s.imageUrl;
+            document.getElementById('swatch-imgs').value = urlsText;
+
+            document.getElementById('swatch-likes').value = s.likes || 0;
+            document.getElementById('swatch-views').value = s.views || 0;
+
+            document.getElementById('swatch-visible').checked = s.visible !== false;
+            document.getElementById('swatch-modal-title').innerText = 'Edit Swatch';
+            window.openModal('modal-swatch');
+        };
+
         document.getElementById('btn-save-swatch').addEventListener('click', async () => {
+            const id = document.getElementById('swatch-id').value;
             const pId = document.getElementById('swatch-product').value;
             if (!pId) return window.showToast("Please select a product", "error");
 
+            const rawUrls = document.getElementById('swatch-imgs').value.split('\n');
+            const imageUrls = rawUrls.map(u => u.trim()).filter(u => u !== '');
+            const primaryImg = imageUrls.length > 0 ? imageUrls[0] : '';
+
             const data = {
                 productId: pId,
-                imageUrl: document.getElementById('swatch-img').value,
+                imageUrls: imageUrls,
+                imageUrl: primaryImg, // fallback
                 shade: document.getElementById('swatch-shade').value,
                 skinTone: document.getElementById('swatch-skin').value,
                 undertone: document.getElementById('swatch-undertone').value,
                 lighting: document.getElementById('swatch-light').value,
                 notes: document.getElementById('swatch-notes').value,
+                likes: parseInt(document.getElementById('swatch-likes').value) || 0,
+                views: parseInt(document.getElementById('swatch-views').value) || 0,
                 visible: document.getElementById('swatch-visible').checked,
-                createdAt: serverTimestamp(),
-                likes: 0, 
-                views: 0, 
-                commentsCount: 0
+                updatedAt: serverTimestamp()
             };
+
             try {
-                await addDoc(collection(db, "swatches"), data);
-                await updateDoc(doc(db, "products", pId), { swatchCount: increment(1) });
+                if(id) {
+                    await updateDoc(doc(db, "swatches", id), data);
+                } else {
+                    data.createdAt = serverTimestamp();
+                    data.commentsCount = 0;
+                    await addDoc(collection(db, "swatches"), data);
+                    await updateDoc(doc(db, "products", pId), { swatchCount: increment(1) });
+                }
                 window.showToast("Swatch saved!");
                 window.closeModal('modal-swatch');
+                await populateSwatchesData();
                 fetchSwatches();
-            } catch(e) { 
-                window.showToast("Error saving swatch", "error"); 
-            }
+            } catch(e) { window.showToast("Error saving swatch", "error"); }
         });
 
         // Global Delete Helper
         window.delDoc = async (col, id, callback) => {
-            if (!confirm("Are you sure you want to delete this item?")) return;
+            if (!confirm("Are you sure you want to permanently delete this?")) return;
             try {
                 await deleteDoc(doc(db, col, id));
                 window.showToast("Deleted successfully");
                 callback();
-            } catch(e) { 
-                window.showToast("Error deleting document", "error"); 
-            }
+            } catch(e) { window.showToast("Error deleting", "error"); }
         };
 
     </script>
