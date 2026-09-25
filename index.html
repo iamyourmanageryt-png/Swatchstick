@@ -191,7 +191,12 @@
            HERO SECTION
            ========================================================================== */
         .hero { padding: 60px 0; min-height: 60vh; display: flex; align-items: center; position: relative; overflow: hidden; }
-        .hero-inner { display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 40px; align-items: center; }
+        .hero-bg-glow { position: absolute; top: -20%; right: -10%; width: 600px; height: 600px; background: radial-gradient(circle, var(--primary-light) 0%, transparent 70%); border-radius: 50%; opacity: 0.5; z-index: -1; pointer-events: none; }
+        
+        /* Fixed hero to stay left aligned and proper grid layout */
+        .hero-inner { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center; width: 100%; }
+        .hero-content { max-width: 600px; text-align: left; }
+        
         .hero-eyebrow { font-size: 0.85rem; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; color: var(--primary); margin-bottom: 20px; display: inline-block; background: var(--primary-light); padding: 6px 16px; border-radius: 20px; }
         .hero-title { font-size: 4.5rem; line-height: 1.1; margin-bottom: 24px; }
         .hero-title em { color: var(--primary); font-style: italic; }
@@ -209,7 +214,6 @@
         .product-card { background: var(--bg-surface); border-radius: var(--radius-md); overflow: hidden; border: 1px solid var(--border); box-shadow: var(--shadow-sm); transition: var(--transition); cursor: pointer; display: flex; flex-direction: column; }
         .product-card:hover { transform: translateY(-8px); box-shadow: var(--shadow-lg); border-color: var(--primary); }
         
-        /* Fixed Cropping: Use contain inside a unified background */
         .product-image-wrap { position: relative; aspect-ratio: 1/1; background: var(--bg-base); padding: 20px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: center; overflow: hidden; }
         .product-image-wrap img { width: 100%; height: 100%; object-fit: contain; transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94); }
         .product-card:hover .product-image-wrap img { transform: scale(1.1); }
@@ -239,21 +243,10 @@
            ========================================================================== */
         .ig-banner {
             background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
-            color: #FFFFFF;
-            padding: 24px 32px;
-            border-radius: var(--radius-lg);
-            display: none; /* Shows via JS if URL exists */
-            align-items: center;
-            justify-content: center;
-            gap: 12px;
-            font-size: 1.3rem;
-            font-weight: 700;
-            box-shadow: var(--shadow-md);
-            margin: 40px auto 60px;
-            max-width: 800px;
-            transition: var(--transition);
-            cursor: pointer;
-            text-decoration: none;
+            color: #FFFFFF; padding: 24px 32px; border-radius: var(--radius-lg);
+            display: none; align-items: center; justify-content: center; gap: 12px;
+            font-size: 1.3rem; font-weight: 700; box-shadow: var(--shadow-md);
+            margin: 40px auto 60px; max-width: 800px; transition: var(--transition); cursor: pointer; text-decoration: none;
         }
         .ig-banner:hover { transform: scale(1.02); box-shadow: var(--shadow-lg); color: #FFFFFF; }
         .ig-banner .material-symbols-rounded { font-size: 2rem; }
@@ -300,7 +293,7 @@
         
         .prod-actions-row { display: flex; gap: 16px; margin-top: 16px; }
 
-        /* Community Swatches Inside Panel */
+        /* Real Swatches Grid in Panel */
         .panel-swatch-section { padding: 40px 32px; background: var(--primary-light); border-top: 1px solid var(--border); }
         .swatch-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; margin-top: 24px; }
         .swatch-card { border-radius: var(--radius-md); overflow: hidden; position: relative; aspect-ratio: 3/4; cursor: pointer; box-shadow: var(--shadow-sm); transition: 0.3s; border: 2px solid transparent; background: var(--bg-surface); }
@@ -364,7 +357,7 @@
            ========================================================================== */
         @media (max-width: 992px) {
             .hero-inner { grid-template-columns: 1fr; text-align: center; gap: 40px; }
-            .hero-content { margin: 0 auto; }
+            .hero-content { margin: 0 auto; text-align: center; }
             .hero-title { font-size: 3.8rem; }
             .hero-desc { margin: 0 auto 30px; }
             .hero-visual { height: 400px; max-width: 600px; margin: 0 auto; }
@@ -576,6 +569,7 @@
                     <div class="form-group"><label>Username</label><input type="text" id="signup-name" required></div>
                     <div class="form-group"><label>Email</label><input type="email" id="signup-email" required></div>
                     <div class="form-group"><label>Password</label><input type="password" id="signup-password" required minlength="6"></div>
+                    <div class="form-group"><label>Profile Picture URL (Optional)</label><input type="text" id="signup-avatar" placeholder="https://..."></div>
                     <button type="submit" class="btn-primary" id="btn-signup-submit" style="width:100%;">Create Account</button>
                 </form>
                 <div class="auth-switch">Already a member? <button type="button" onclick="App.switchView('login-view')">Log in</button></div>
@@ -693,7 +687,7 @@
             currentSwatches: [],
             currentSwatchIndex: 0,
             currentProductId: null,
-            base64AvatarUpload: null, // Temporary store for Base64
+            base64AvatarUpload: null,
 
             // Utils
             formatCurrency: (val) => val ? (/^[^\d]/.test(String(val).trim()) ? String(val).trim() : `₹${String(val).trim()}`) : '',
@@ -735,7 +729,7 @@
                     const preview = document.getElementById('edit-avatar-preview');
                     if(App.currentUser.photoURL) { preview.src = App.currentUser.photoURL; preview.style.display = 'block'; }
                     else { preview.style.display = 'none'; }
-                    App.base64AvatarUpload = null; // reset
+                    App.base64AvatarUpload = null;
                 } else {
                     document.getElementById(view).style.display = 'block';
                 }
@@ -777,11 +771,9 @@
                 document.documentElement.setAttribute('data-theme', savedTheme);
                 document.getElementById('theme-icon').innerText = savedTheme === 'dark' ? 'light_mode' : 'dark_mode';
 
-                // Setup File Listener
                 const fileInput = document.getElementById('edit-avatar-file');
                 if(fileInput) fileInput.addEventListener('change', App.handleFileSelect);
 
-                // Auth Listener
                 onAuthStateChanged(auth, (user) => {
                     App.currentUser = user;
                     if (user) {
@@ -793,17 +785,14 @@
                     }
                 });
 
-                // Load Data
                 App.loadSettings();
                 App.loadHero();
                 App.loadCategories();
                 await App.loadProducts();
 
-                // Listeners
                 document.getElementById('search-input').addEventListener('input', App.handleSearch);
                 document.addEventListener('keydown', (e) => { if (e.key === 'Escape') App.closeAll(); });
 
-                // Deep links
                 const params = new URLSearchParams(window.location.search);
                 if (params.get('category')) { App.filterCategory(params.get('category'), null); document.getElementById('discover').scrollIntoView(); }
                 if (params.get('product')) {
@@ -817,7 +806,6 @@
                 }
             },
 
-            // Data Loaders
             loadSettings: async () => {
                 try {
                     const snap = await getDoc(doc(db, "siteSettings", "general"));
@@ -839,7 +827,6 @@
                         if(d.tiktokUrl) sHtml += `<a href="${d.tiktokUrl}" target="_blank" style="color:var(--primary); font-weight:700;">TikTok</a>`;
                         if(sHtml) document.getElementById('social-links-container').innerHTML = sHtml;
 
-                        // Check Instagram URL for the banner
                         if(d.instagramUrl) {
                             const igBanner = document.getElementById('ig-banner-link');
                             if(igBanner) {
@@ -884,12 +871,10 @@
                     const snap = await getDocs(query(collection(db, "products"), where("visible", "==", true)));
                     App.allProducts = []; snap.forEach(d => App.allProducts.push({ id: d.id, ...d.data() }));
                     
-                    // Render Trending
                     const trGrid = document.getElementById('trending-grid');
                     const tr = App.allProducts.filter(p => p.trending).slice(0, 4);
                     trGrid.innerHTML = tr.length ? tr.map(p => App.createCard(p)).join('') : `<div class="empty-state" style="grid-column: 1/-1;"><h3>No trending items</h3></div>`;
                     
-                    // Render Discover
                     App.filterCategory('all', null);
                 } catch (err) { App.showToast("Cannot load products right now.", "error"); }
             },
@@ -926,7 +911,6 @@
                 grid.innerHTML = filtered.length ? filtered.map(p => App.createCard(p)).join('') : `<div class="empty-state" style="grid-column: 1/-1;"><h3>No shades found here yet 🎀</h3></div>`;
             },
 
-            // Search
             searchTimeout: null,
             handleSearch: (e) => {
                 clearTimeout(App.searchTimeout); const val = e.target.value.toLowerCase().trim();
@@ -947,7 +931,6 @@
                 }, 300);
             },
 
-            // Product Detail
             openProduct: async (id) => {
                 App.openModal('product-overlay');
                 App.currentProductId = id;
@@ -987,7 +970,6 @@
                             <div class="prod-detail-price">${App.formatCurrency(p.price)}</div>
                             ${p.shade ? `<div style="margin-bottom:16px; font-weight:700; font-size:0.9rem; color:var(--bg-surface); background:var(--primary); display:inline-block; padding:8px 20px; border-radius:12px; letter-spacing:0.05em;">SHADE: ${p.shade}</div>` : ''}
                             
-                            <!-- Dedicated Prominent Swatch Button -->
                             <button class="btn-swatch-jump" onclick="document.getElementById('panel-swatches').scrollIntoView({behavior: 'smooth'})">
                                 <span class="material-symbols-rounded">palette</span> View Real Swatches ✨
                             </button>
@@ -1003,9 +985,9 @@
                         </div>
                         
                         <div class="panel-swatch-section" id="panel-swatches">
-                            <h3 style="font-family:var(--font-serif); font-size:2.2rem; color:var(--text-main);">Community Swatches ✨</h3>
+                            <h3 style="font-family:var(--font-serif); font-size:2.2rem; color:var(--text-main);">Real Swatches ✨</h3>
                             ${App.currentSwatches.length === 0 ? 
-                                `<div class="empty-state" style="padding:20px 0;"><p>Be the first to upload a swatch!</p></div>` : 
+                                `<div class="empty-state" style="padding:20px 0;"><p>Swatches coming soon! 🎀</p></div>` : 
                                 `<div class="swatch-grid">
                                     ${App.currentSwatches.map((s, idx) => `
                                         <div class="swatch-card" onclick="App.openSwatchViewer(${idx})">
@@ -1026,7 +1008,6 @@
                 window.history.pushState({}, '', window.location.pathname);
             },
 
-            // Swatch Viewer
             openSwatchViewer: async (index) => {
                 if (!App.currentSwatches[index]) return;
                 App.currentSwatchIndex = index; const s = App.currentSwatches[index];
@@ -1067,7 +1048,6 @@
                 window.history.pushState({}, '', `?${params.toString()}`); 
             },
 
-            // Actions (Like, Save, Share)
             toggleLike: async (id, type, e) => {
                 if(!App.requireAuth()) return;
                 App.spawnHeart(e);
@@ -1116,8 +1096,8 @@
                 else { navigator.clipboard.writeText(url); App.showToast("Link copied! ✨"); }
             },
 
-            // Auth Functions
             openProfile: () => { App.openModal('auth-overlay'); if(App.currentUser) App.switchView('profile-view'); else App.switchView('login-view'); },
+            
             openWishlist: async () => {
                 if(!App.requireAuth()) return;
                 App.closeModal('auth-overlay');
@@ -1182,7 +1162,7 @@
                     const av = document.getElementById('profile-avatar-display');
                     if(newAvatar) av.innerHTML = `<img src="${newAvatar}">`; else av.innerHTML = newName.charAt(0).toUpperCase();
                     
-                    App.base64AvatarUpload = null; // Clear out temporary base64
+                    App.base64AvatarUpload = null;
                     App.showToast("Profile beautifully updated! ✨");
                     App.switchView('profile-display');
                 } catch(err) { App.showToast("Error updating profile", "error"); }
@@ -1190,7 +1170,6 @@
             }
         };
 
-        // Initialize on load
         document.addEventListener('DOMContentLoaded', App.init);
     </script>
 </body>
