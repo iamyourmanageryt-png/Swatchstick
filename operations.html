@@ -1,0 +1,821 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SwatchStick - Operations Panel</title>
+    
+    <!-- Fonts & Icons -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet">
+
+    <style>
+        :root {
+            --bg-body: #F3F4F6;
+            --bg-surface: #FFFFFF;
+            --bg-sidebar: #1F2937;
+            --text-main: #111827;
+            --text-muted: #6B7280;
+            --text-light: #F9FAFB;
+            --primary: #9B536F; /* SwatchStick Brand Rose */
+            --primary-hover: #7E4058;
+            --border: #E5E7EB;
+            --danger: #EF4444;
+            --success: #10B981;
+            
+            --radius-md: 8px;
+            --radius-lg: 12px;
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background-color: var(--bg-body); color: var(--text-main); font-size: 14px; }
+        
+        button { cursor: pointer; border: none; font-family: inherit; }
+        input, select, textarea { font-family: inherit; width: 100%; padding: 10px 12px; border: 1px solid var(--border); border-radius: var(--radius-md); outline: none; transition: border 0.2s; }
+        input:focus, select:focus, textarea:focus { border-color: var(--primary); }
+        
+        .btn { padding: 10px 16px; border-radius: var(--radius-md); font-weight: 500; display: inline-flex; align-items: center; gap: 8px; transition: 0.2s; }
+        .btn-primary { background: var(--primary); color: white; }
+        .btn-primary:hover { background: var(--primary-hover); }
+        .btn-secondary { background: white; border: 1px solid var(--border); color: var(--text-main); }
+        .btn-secondary:hover { background: var(--bg-body); }
+        .btn-danger { background: var(--danger); color: white; }
+
+        /* ================= AUTH SCREEN ================= */
+        #auth-screen { position: fixed; inset: 0; background: var(--bg-body); display: flex; align-items: center; justify-content: center; z-index: 1000; }
+        .auth-card { background: white; padding: 40px; border-radius: var(--radius-lg); box-shadow: var(--shadow-md); text-align: center; max-width: 400px; width: 100%; }
+        .auth-card h1 { color: var(--primary); margin-bottom: 8px; font-size: 24px; }
+        .auth-card p { color: var(--text-muted); margin-bottom: 24px; }
+
+        /* ================= LAYOUT ================= */
+        #app-layout { display: none; height: 100vh; overflow: hidden; }
+        .sidebar { width: 260px; background: var(--bg-sidebar); color: var(--text-light); display: flex; flex-direction: column; }
+        .sidebar-header { padding: 24px; font-size: 20px; font-weight: 700; border-bottom: 1px solid rgba(255,255,255,0.1); display: flex; align-items: center; gap: 12px; }
+        .nav-menu { flex: 1; padding: 20px 0; display: flex; flex-direction: column; gap: 4px; }
+        .nav-item { padding: 12px 24px; color: #D1D5DB; display: flex; align-items: center; gap: 12px; font-weight: 500; transition: 0.2s; cursor: pointer; }
+        .nav-item:hover, .nav-item.active { background: rgba(255,255,255,0.1); color: white; }
+        .nav-item .material-symbols-rounded { font-size: 20px; }
+        
+        .main-content { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+        .topbar { height: 64px; background: white; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; padding: 0 32px; }
+        .content-area { flex: 1; padding: 32px; overflow-y: auto; }
+        
+        /* ================= VIEWS & CARDS ================= */
+        .view-section { display: none; max-width: 1200px; margin: 0 auto; }
+        .view-section.active { display: block; }
+        .page-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
+        .page-title { font-size: 24px; font-weight: 600; }
+        
+        .card { background: white; border-radius: var(--radius-md); box-shadow: var(--shadow-sm); border: 1px solid var(--border); overflow: hidden; margin-bottom: 24px; }
+        .card-header { padding: 16px 24px; border-bottom: 1px solid var(--border); font-weight: 600; background: #F8FAFC; }
+        .card-body { padding: 24px; }
+        
+        /* ================= FORMS & TABLES ================= */
+        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        .form-group { margin-bottom: 16px; }
+        .form-group.full { grid-column: 1 / -1; }
+        .form-label { display: block; margin-bottom: 6px; font-weight: 500; color: var(--text-main); }
+        .checkbox-label { display: flex; align-items: center; gap: 8px; cursor: pointer; font-weight: 500; }
+        .checkbox-label input { width: auto; }
+        
+        table { width: 100%; border-collapse: collapse; text-align: left; }
+        th, td { padding: 12px 24px; border-bottom: 1px solid var(--border); }
+        th { background: #F8FAFC; font-weight: 500; color: var(--text-muted); font-size: 12px; text-transform: uppercase; letter-spacing: 0.05em; }
+        tr:hover { background: #F9FAFB; }
+        .img-cell { width: 40px; height: 40px; border-radius: 4px; object-fit: cover; background: #eee; }
+        
+        .action-btns { display: flex; gap: 8px; }
+        .btn-icon { padding: 6px; border-radius: 4px; background: white; border: 1px solid var(--border); color: var(--text-muted); display: inline-flex; }
+        .btn-icon:hover { color: var(--primary); border-color: var(--primary); }
+
+        /* ================= MODALS ================= */
+        .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); display: none; align-items: center; justify-content: center; z-index: 2000; }
+        .modal-overlay.active { display: flex; }
+        .modal { background: white; width: 100%; max-width: 600px; border-radius: var(--radius-lg); box-shadow: var(--shadow-md); max-height: 90vh; display: flex; flex-direction: column; }
+        .modal-header { padding: 20px 24px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; font-weight: 600; font-size: 18px; }
+        .modal-body { padding: 24px; overflow-y: auto; }
+        .modal-footer { padding: 20px 24px; border-top: 1px solid var(--border); display: flex; justify-content: flex-end; gap: 12px; background: #F8FAFC; border-radius: 0 0 var(--radius-lg) var(--radius-lg); }
+
+        /* ================= TOASTS ================= */
+        #toast-container { position: fixed; bottom: 24px; right: 24px; z-index: 9999; display: flex; flex-direction: column; gap: 10px; }
+        .toast { padding: 12px 20px; border-radius: var(--radius-md); color: white; display: flex; align-items: center; gap: 8px; font-weight: 500; box-shadow: var(--shadow-md); animation: slideIn 0.3s forwards; }
+        .toast.success { background: var(--success); }
+        .toast.error { background: var(--danger); }
+        @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+    </style>
+</head>
+<body>
+
+    <!-- AUTH SCREEN -->
+    <div id="auth-screen">
+        <div class="auth-card">
+            <span class="material-symbols-rounded" style="font-size: 48px; color: var(--primary); margin-bottom: 16px;">admin_panel_settings</span>
+            <h1>SwatchStick Ops</h1>
+            <p>Admin Operations Panel</p>
+            <button class="btn btn-primary" id="btn-one-tap" style="width: 100%; justify-content: center; font-size: 16px; padding: 12px;">
+                <span class="material-symbols-rounded">login</span> One-Tap Sign In
+            </button>
+            <p style="font-size: 12px; margin-top: 16px; opacity: 0.7;">Secure anonymous authentication</p>
+        </div>
+    </div>
+
+    <!-- MAIN DASHBOARD -->
+    <div id="app-layout" style="display: flex;">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <span class="material-symbols-rounded" style="color: var(--primary);">tune</span>
+                SwatchOps
+            </div>
+            <nav class="nav-menu">
+                <div class="nav-item active" data-target="view-settings">
+                    <span class="material-symbols-rounded">settings</span> Site Settings
+                </div>
+                <div class="nav-item" data-target="view-hero">
+                    <span class="material-symbols-rounded">view_carousel</span> Hero & Home
+                </div>
+                <div class="nav-item" data-target="view-categories">
+                    <span class="material-symbols-rounded">category</span> Categories
+                </div>
+                <div class="nav-item" data-target="view-products">
+                    <span class="material-symbols-rounded">inventory_2</span> Products
+                </div>
+                <div class="nav-item" data-target="view-swatches">
+                    <span class="material-symbols-rounded">palette</span> Swatches
+                </div>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <header class="topbar">
+                <div style="font-weight: 500; color: var(--text-muted);">Database Connected: <span style="color: var(--success)">designsnap-f3309</span></div>
+                <button class="btn btn-secondary" id="btn-logout" style="padding: 6px 12px; font-size: 13px;">
+                    <span class="material-symbols-rounded" style="font-size: 18px;">logout</span> Exit
+                </button>
+            </header>
+
+            <div class="content-area">
+                
+                <!-- VIEW: SITE SETTINGS -->
+                <div id="view-settings" class="view-section active">
+                    <div class="page-header">
+                        <h2 class="page-title">Global Site Settings</h2>
+                        <button class="btn btn-primary" id="btn-save-settings"><span class="material-symbols-rounded">save</span> Save Settings</button>
+                    </div>
+                    <div class="card">
+                        <div class="card-header">Brand Identity</div>
+                        <div class="card-body form-grid" id="form-settings">
+                            <div class="form-group">
+                                <label class="form-label">Brand Name</label>
+                                <input type="text" id="set-brandName" placeholder="e.g. SwatchStick">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Contact Email</label>
+                                <input type="email" id="set-contactEmail" placeholder="hello@swatchstick.com">
+                            </div>
+                            <div class="form-group full">
+                                <label class="form-label">Tagline / Footer Text</label>
+                                <input type="text" id="set-tagline" placeholder="Discover real swatches...">
+                            </div>
+                            <div class="form-group full">
+                                <label class="form-label">Logo URL (Leave blank for text logo)</label>
+                                <input type="text" id="set-logoUrl" placeholder="https://...">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Instagram URL</label>
+                                <input type="text" id="set-instagramUrl" placeholder="https://instagram.com/...">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">TikTok URL</label>
+                                <input type="text" id="set-tiktokUrl" placeholder="https://tiktok.com/...">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- VIEW: HERO -->
+                <div id="view-hero" class="view-section">
+                    <div class="page-header">
+                        <h2 class="page-title">Homepage & Hero</h2>
+                        <button class="btn btn-primary" id="btn-save-hero"><span class="material-symbols-rounded">save</span> Save Hero</button>
+                    </div>
+                    <div class="card">
+                        <div class="card-header">Hero Section Content</div>
+                        <div class="card-body form-grid" id="form-hero">
+                            <div class="form-group full">
+                                <label class="checkbox-label">
+                                    <input type="checkbox" id="hero-enabled" checked> Enable Hero Section
+                                </label>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Eyebrow (Small caps text)</label>
+                                <input type="text" id="hero-eyebrow" placeholder="REAL BEAUTY">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Main Title (HTML allowed for emphasis)</label>
+                                <input type="text" id="hero-title" placeholder="Beauty looks better...">
+                            </div>
+                            <div class="form-group full">
+                                <label class="form-label">Description</label>
+                                <textarea id="hero-desc" rows="2"></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Button Text</label>
+                                <input type="text" id="hero-btnText" placeholder="Explore swatches">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Button Link</label>
+                                <input type="text" id="hero-btnLink" placeholder="#discover">
+                            </div>
+                            <div class="form-group full">
+                                <label class="form-label">Main Image URL</label>
+                                <input type="text" id="hero-img">
+                            </div>
+                            <div class="form-group full">
+                                <label class="form-label">Secondary Floating Image URL (Optional)</label>
+                                <input type="text" id="hero-secImg">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- VIEW: CATEGORIES -->
+                <div id="view-categories" class="view-section">
+                    <div class="page-header">
+                        <h2 class="page-title">Categories</h2>
+                        <button class="btn btn-primary" onclick="openModal('modal-category')"><span class="material-symbols-rounded">add</span> Add Category</button>
+                    </div>
+                    <div class="card">
+                        <table id="table-categories">
+                            <thead>
+                                <tr><th>Name</th><th>Slug</th><th>Order</th><th>Status</th><th>Actions</th></tr>
+                            </thead>
+                            <tbody><!-- Rendered via JS --></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- VIEW: PRODUCTS -->
+                <div id="view-products" class="view-section">
+                    <div class="page-header">
+                        <h2 class="page-title">Products</h2>
+                        <button class="btn btn-primary" onclick="openModal('modal-product')"><span class="material-symbols-rounded">add</span> Add Product</button>
+                    </div>
+                    <div class="card">
+                        <table id="table-products">
+                            <thead>
+                                <tr><th>Image</th><th>Brand</th><th>Product Name</th><th>Category</th><th>Stats</th><th>Status</th><th>Actions</th></tr>
+                            </thead>
+                            <tbody><!-- Rendered via JS --></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- VIEW: SWATCHES -->
+                <div id="view-swatches" class="view-section">
+                    <div class="page-header">
+                        <h2 class="page-title">Real Swatches</h2>
+                        <button class="btn btn-primary" onclick="openModal('modal-swatch')"><span class="material-symbols-rounded">add</span> Add Swatch</button>
+                    </div>
+                    <div class="card">
+                        <table id="table-swatches">
+                            <thead>
+                                <tr><th>Image</th><th>Product</th><th>Shade</th><th>Skin/Undertone</th><th>Status</th><th>Actions</th></tr>
+                            </thead>
+                            <tbody><!-- Rendered via JS --></tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+    <!-- ================= MODALS ================= -->
+
+    <!-- Category Modal -->
+    <div class="modal-overlay" id="modal-category">
+        <div class="modal">
+            <div class="modal-header">
+                <span id="cat-modal-title">Add Category</span>
+                <button class="btn-icon" onclick="closeModal('modal-category')"><span class="material-symbols-rounded">close</span></button>
+            </div>
+            <div class="modal-body form-grid">
+                <input type="hidden" id="cat-id">
+                <div class="form-group full">
+                    <label class="form-label">Category Name</label>
+                    <input type="text" id="cat-name" placeholder="e.g. Lip">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Slug (URL friendly)</label>
+                    <input type="text" id="cat-slug" placeholder="e.g. lip">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Display Order (Number)</label>
+                    <input type="number" id="cat-order" value="1">
+                </div>
+                <div class="form-group full">
+                    <label class="checkbox-label"><input type="checkbox" id="cat-visible" checked> Visible to public</label>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal('modal-category')">Cancel</button>
+                <button class="btn btn-primary" id="btn-save-category">Save Category</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Product Modal -->
+    <div class="modal-overlay" id="modal-product">
+        <div class="modal" style="max-width: 800px;">
+            <div class="modal-header">
+                <span id="prod-modal-title">Add Product</span>
+                <button class="btn-icon" onclick="closeModal('modal-product')"><span class="material-symbols-rounded">close</span></button>
+            </div>
+            <div class="modal-body form-grid">
+                <input type="hidden" id="prod-id">
+                <div class="form-group">
+                    <label class="form-label">Brand</label>
+                    <input type="text" id="prod-brand" placeholder="e.g. Fenty Beauty">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Product Name</label>
+                    <input type="text" id="prod-name" placeholder="e.g. Gloss Bomb">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Category</label>
+                    <select id="prod-category">
+                        <option value="">Select Category...</option>
+                        <!-- Injected -->
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Specific Shade (Optional)</label>
+                    <input type="text" id="prod-shade" placeholder="e.g. Fenty Glow">
+                </div>
+                <div class="form-group full">
+                    <label class="form-label">Image URL</label>
+                    <input type="text" id="prod-img" placeholder="https://...">
+                </div>
+                <div class="form-group full">
+                    <label class="form-label">Description</label>
+                    <textarea id="prod-desc" rows="3"></textarea>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Price (String, e.g. $21.00)</label>
+                    <input type="text" id="prod-price">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">External Purchase URL</label>
+                    <input type="text" id="prod-url">
+                </div>
+                <div class="form-group full" style="display: flex; gap: 24px; padding: 12px; background: #F8FAFC; border-radius: 8px;">
+                    <label class="checkbox-label"><input type="checkbox" id="prod-visible" checked> Visible</label>
+                    <label class="checkbox-label"><input type="checkbox" id="prod-trending"> Trending</label>
+                    <label class="checkbox-label"><input type="checkbox" id="prod-featured"> Featured</label>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal('modal-product')">Cancel</button>
+                <button class="btn btn-primary" id="btn-save-product">Save Product</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Swatch Modal -->
+    <div class="modal-overlay" id="modal-swatch">
+        <div class="modal">
+            <div class="modal-header">
+                <span id="swatch-modal-title">Add Swatch</span>
+                <button class="btn-icon" onclick="closeModal('modal-swatch')"><span class="material-symbols-rounded">close</span></button>
+            </div>
+            <div class="modal-body form-grid">
+                <input type="hidden" id="swatch-id">
+                <div class="form-group full">
+                    <label class="form-label">Link to Product</label>
+                    <select id="swatch-product" required>
+                        <option value="">Select Product...</option>
+                        <!-- Injected -->
+                    </select>
+                </div>
+                <div class="form-group full">
+                    <label class="form-label">Swatch Image URL</label>
+                    <input type="text" id="swatch-img" placeholder="https://...">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Shade/Color Name</label>
+                    <input type="text" id="swatch-shade">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Skin Tone</label>
+                    <select id="swatch-skin">
+                        <option value="">Unknown</option>
+                        <option value="Fair">Fair</option>
+                        <option value="Light">Light</option>
+                        <option value="Medium">Medium</option>
+                        <option value="Tan">Tan</option>
+                        <option value="Deep">Deep</option>
+                        <option value="Dark">Dark</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Undertone</label>
+                    <select id="swatch-undertone">
+                        <option value="">Unknown</option>
+                        <option value="Cool">Cool</option>
+                        <option value="Neutral">Neutral</option>
+                        <option value="Warm">Warm</option>
+                        <option value="Olive">Olive</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Lighting</label>
+                    <select id="swatch-light">
+                        <option value="">Unknown</option>
+                        <option value="Natural Light">Natural Light</option>
+                        <option value="Indoor/Ring Light">Indoor/Ring Light</option>
+                        <option value="Flash">Flash</option>
+                    </select>
+                </div>
+                <div class="form-group full">
+                    <label class="form-label">Notes</label>
+                    <textarea id="swatch-notes" rows="2" placeholder="User notes about formula, wear, etc."></textarea>
+                </div>
+                <div class="form-group full">
+                    <label class="checkbox-label"><input type="checkbox" id="swatch-visible" checked> Visible</label>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal('modal-swatch')">Cancel</button>
+                <button class="btn btn-primary" id="btn-save-swatch">Save Swatch</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="toast-container"></div>
+
+    <!-- FIREBASE & LOGIC -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
+        import { getAuth, signInAnonymously, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
+        import { getFirestore, collection, doc, getDoc, getDocs, setDoc, addDoc, updateDoc, deleteDoc, increment, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyAZ_c3EaDxSZ6RrNrQjR_TauJHrPfk_lk",
+            authDomain: "designsnap-f3309.firebaseapp.com",
+            projectId: "designsnap-f3309",
+            storageBucket: "designsnap-f3309.appspot.com"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        // Global State Collections for dropdowns/joins
+        let categoriesData = [];
+        let productsData = [];
+
+        // UI Utils
+        window.showToast = (msg, type='success') => {
+            const c = document.getElementById('toast-container');
+            const t = document.createElement('div');
+            t.className = `toast ${type}`;
+            t.innerHTML = `<span class="material-symbols-rounded">${type==='success'?'check_circle':'error'}</span> ${msg}`;
+            c.appendChild(t);
+            setTimeout(() => t.remove(), 3000);
+        };
+
+        window.openModal = (id) => {
+            document.getElementById(id).classList.add('active');
+            // Reset forms if opening without passing data
+            if(id === 'modal-category') { document.getElementById('cat-id').value = ''; document.getElementById('cat-name').value=''; document.getElementById('cat-slug').value=''; }
+            if(id === 'modal-product') { document.getElementById('prod-id').value = ''; document.getElementById('prod-brand').value=''; document.getElementById('prod-name').value=''; }
+            if(id === 'modal-swatch') { document.getElementById('swatch-id').value = ''; document.getElementById('swatch-img').value=''; }
+        };
+        window.closeModal = (id) => document.getElementById(id).classList.remove('active');
+
+        // Navigation
+        document.querySelectorAll('.nav-item').forEach(el => {
+            el.addEventListener('click', (e) => {
+                document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+                document.querySelectorAll('.view-section').forEach(v => v.classList.remove('active'));
+                el.classList.add('active');
+                document.getElementById(el.dataset.target).classList.add('active');
+                loadViewData(el.dataset.target);
+            });
+        });
+
+        // Auth Logic
+        document.getElementById('btn-one-tap').addEventListener('click', async () => {
+            try {
+                await signInAnonymously(auth);
+            } catch(e) { window.showToast("Auth failed: " + e.message, "error"); }
+        });
+
+        document.getElementById('btn-logout').addEventListener('click', () => signOut(auth));
+
+        onAuthStateChanged(auth, (user) => {
+            if(user) {
+                document.getElementById('auth-screen').style.display = 'none';
+                document.getElementById('app-layout').style.display = 'flex';
+                loadViewData('view-settings'); // load default
+            } else {
+                document.getElementById('auth-screen').style.display = 'flex';
+                document.getElementById('app-layout').style.display = 'none';
+            }
+        });
+
+        // Routing & Data Loaders
+        async function loadViewData(viewId) {
+            if(viewId === 'view-settings') await fetchSettings();
+            if(viewId === 'view-hero') await fetchHero();
+            if(viewId === 'view-categories') await fetchCategories();
+            if(viewId === 'view-products') { await fetchCategoriesForDropdown(); await fetchProducts(); }
+            if(viewId === 'view-swatches') { await fetchProductsForDropdown(); await fetchSwatches(); }
+        }
+
+        // ================= SITE SETTINGS =================
+        async function fetchSettings() {
+            try {
+                const snap = await getDoc(doc(db, "siteSettings", "general"));
+                if(snap.exists()) {
+                    const d = snap.data();
+                    document.getElementById('set-brandName').value = d.brandName || '';
+                    document.getElementById('set-contactEmail').value = d.contactEmail || '';
+                    document.getElementById('set-tagline').value = d.tagline || '';
+                    document.getElementById('set-logoUrl').value = d.logoUrl || '';
+                    document.getElementById('set-instagramUrl').value = d.instagramUrl || '';
+                    document.getElementById('set-tiktokUrl').value = d.tiktokUrl || '';
+                }
+            } catch(e) { console.error(e); }
+        }
+        document.getElementById('btn-save-settings').addEventListener('click', async () => {
+            try {
+                await setDoc(doc(db, "siteSettings", "general"), {
+                    brandName: document.getElementById('set-brandName').value,
+                    contactEmail: document.getElementById('set-contactEmail').value,
+                    tagline: document.getElementById('set-tagline').value,
+                    logoUrl: document.getElementById('set-logoUrl').value,
+                    instagramUrl: document.getElementById('set-instagramUrl').value,
+                    tiktokUrl: document.getElementById('set-tiktokUrl').value
+                }, { merge: true });
+                window.showToast("Settings saved!");
+            } catch(e) { window.showToast("Error saving", "error"); }
+        });
+
+        // ================= HERO =================
+        async function fetchHero() {
+            try {
+                const snap = await getDoc(doc(db, "homepage", "hero"));
+                if(snap.exists()) {
+                    const d = snap.data();
+                    document.getElementById('hero-enabled').checked = d.enabled !== false;
+                    document.getElementById('hero-eyebrow').value = d.eyebrow || '';
+                    document.getElementById('hero-title').value = d.title || '';
+                    document.getElementById('hero-desc').value = d.description || '';
+                    document.getElementById('hero-btnText').value = d.buttonText || '';
+                    document.getElementById('hero-btnLink').value = d.buttonLink || '';
+                    document.getElementById('hero-img').value = d.imageUrl || '';
+                    document.getElementById('hero-secImg').value = d.secondaryImageUrl || '';
+                }
+            } catch(e) { console.error(e); }
+        }
+        document.getElementById('btn-save-hero').addEventListener('click', async () => {
+            try {
+                await setDoc(doc(db, "homepage", "hero"), {
+                    enabled: document.getElementById('hero-enabled').checked,
+                    eyebrow: document.getElementById('hero-eyebrow').value,
+                    title: document.getElementById('hero-title').value,
+                    description: document.getElementById('hero-desc').value,
+                    buttonText: document.getElementById('hero-btnText').value,
+                    buttonLink: document.getElementById('hero-btnLink').value,
+                    imageUrl: document.getElementById('hero-img').value,
+                    secondaryImageUrl: document.getElementById('hero-secImg').value
+                }, { merge: true });
+                window.showToast("Hero saved!");
+            } catch(e) { window.showToast("Error saving", "error"); }
+        });
+
+        // ================= CATEGORIES =================
+        async function fetchCategories() {
+            try {
+                const snap = await getDocs(collection(db, "categories"));
+                categoriesData = [];
+                let html = '';
+                snap.forEach(d => {
+                    const data = d.data();
+                    categoriesData.push({id: d.id, ...data});
+                    html += `<tr>
+                        <td style="font-weight:500;">${data.name || 'Unnamed'}</td>
+                        <td style="color:var(--text-muted)">${data.slug || ''}</td>
+                        <td>${data.order || 0}</td>
+                        <td>${data.visible ? '<span style="color:var(--success)">Visible</span>' : '<span style="color:var(--text-muted)">Hidden</span>'}</td>
+                        <td class="action-btns">
+                            <button class="btn-icon" onclick="window.editCategory('${d.id}')"><span class="material-symbols-rounded">edit</span></button>
+                            <button class="btn-icon" style="color:var(--danger)" onclick="window.delDoc('categories', '${d.id}', fetchCategories)"><span class="material-symbols-rounded">delete</span></button>
+                        </td>
+                    </tr>`;
+                });
+                document.querySelector('#table-categories tbody').innerHTML = html;
+            } catch(e) { console.error(e); }
+        }
+
+        window.editCategory = (id) => {
+            const cat = categoriesData.find(c => c.id === id);
+            if(!cat) return;
+            document.getElementById('cat-id').value = cat.id;
+            document.getElementById('cat-name').value = cat.name || '';
+            document.getElementById('cat-slug').value = cat.slug || '';
+            document.getElementById('cat-order').value = cat.order || 0;
+            document.getElementById('cat-visible').checked = cat.visible !== false;
+            document.getElementById('cat-modal-title').innerText = 'Edit Category';
+            window.openModal('modal-category');
+        };
+
+        document.getElementById('btn-save-category').addEventListener('click', async () => {
+            const id = document.getElementById('cat-id').value;
+            const data = {
+                name: document.getElementById('cat-name').value,
+                slug: document.getElementById('cat-slug').value,
+                order: parseInt(document.getElementById('cat-order').value) || 0,
+                visible: document.getElementById('cat-visible').checked
+            };
+            try {
+                if(id) { await updateDoc(doc(db, "categories", id), data); }
+                else { await addDoc(collection(db, "categories"), data); }
+                window.showToast("Category saved");
+                window.closeModal('modal-category');
+                fetchCategories();
+            } catch(e) { window.showToast("Error", "error"); }
+        });
+
+        // ================= PRODUCTS =================
+        async function fetchCategoriesForDropdown() {
+            const snap = await getDocs(collection(db, "categories"));
+            let html = '<option value="">Select Category...</option>';
+            snap.forEach(d => {
+                html += `<option value="${d.data().slug || d.data().name}">${d.data().name}</option>`;
+            });
+            document.getElementById('prod-category').innerHTML = html;
+        }
+
+        async function fetchProducts() {
+            try {
+                const snap = await getDocs(collection(db, "products"));
+                productsData = [];
+                let html = '';
+                snap.forEach(d => {
+                    const data = d.data();
+                    productsData.push({id: d.id, ...data});
+                    html += `<tr>
+                        <td><img src="${data.imageUrl || ''}" class="img-cell" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMCIgaGVpZ2h0PSIzMCI+PHJlY3Qgd2lkdGg9IjMwIiBoZWlnaHQ9IjMwIiBmaWxsPSIjZWVlIi8+PC9zdmc+'"></td>
+                        <td>${data.brand || ''}</td>
+                        <td style="font-weight:500;">${data.name || ''}<div style="font-size:11px;color:var(--text-muted);font-weight:400">${data.shade||''}</div></td>
+                        <td>${data.category || ''}</td>
+                        <td style="font-size:12px; color:var(--text-muted)">♥ ${data.likes||0} | 👁 ${data.views||0} | 🎨 ${data.swatchCount||0}</td>
+                        <td>
+                            ${data.visible ? '<span style="color:var(--success); font-size:12px">Visible</span>' : '<span style="color:var(--text-muted); font-size:12px">Hidden</span>'}
+                            ${data.trending ? '<br><span style="color:var(--primary); font-size:11px">Trending</span>' : ''}
+                        </td>
+                        <td class="action-btns">
+                            <button class="btn-icon" onclick="window.editProduct('${d.id}')"><span class="material-symbols-rounded">edit</span></button>
+                            <button class="btn-icon" style="color:var(--danger)" onclick="window.delDoc('products', '${d.id}', fetchProducts)"><span class="material-symbols-rounded">delete</span></button>
+                        </td>
+                    </tr>`;
+                });
+                document.querySelector('#table-products tbody').innerHTML = html;
+            } catch(e) { console.error(e); }
+        }
+
+        window.editProduct = (id) => {
+            const p = productsData.find(x => x.id === id);
+            if(!p) return;
+            document.getElementById('prod-id').value = p.id;
+            document.getElementById('prod-brand').value = p.brand || '';
+            document.getElementById('prod-name').value = p.name || '';
+            document.getElementById('prod-category').value = p.category || '';
+            document.getElementById('prod-shade').value = p.shade || '';
+            document.getElementById('prod-img').value = p.imageUrl || '';
+            document.getElementById('prod-desc').value = p.description || '';
+            document.getElementById('prod-price').value = p.price || '';
+            document.getElementById('prod-url').value = p.productUrl || '';
+            document.getElementById('prod-visible').checked = p.visible !== false;
+            document.getElementById('prod-trending').checked = p.trending === true;
+            document.getElementById('prod-featured').checked = p.featured === true;
+            document.getElementById('prod-modal-title').innerText = 'Edit Product';
+            window.openModal('modal-product');
+        };
+
+        document.getElementById('btn-save-product').addEventListener('click', async () => {
+            const id = document.getElementById('prod-id').value;
+            const data = {
+                brand: document.getElementById('prod-brand').value,
+                name: document.getElementById('prod-name').value,
+                category: document.getElementById('prod-category').value,
+                shade: document.getElementById('prod-shade').value,
+                imageUrl: document.getElementById('prod-img').value,
+                description: document.getElementById('prod-desc').value,
+                price: document.getElementById('prod-price').value,
+                productUrl: document.getElementById('prod-url').value,
+                visible: document.getElementById('prod-visible').checked,
+                trending: document.getElementById('prod-trending').checked,
+                featured: document.getElementById('prod-featured').checked,
+                updatedAt: serverTimestamp()
+            };
+            try {
+                if(id) { await updateDoc(doc(db, "products", id), data); }
+                else {
+                    data.createdAt = serverTimestamp();
+                    data.likes = 0; data.views = 0; data.swatchCount = 0; data.commentsCount = 0;
+                    await addDoc(collection(db, "products"), data);
+                }
+                window.showToast("Product saved");
+                window.closeModal('modal-product');
+                fetchProducts();
+            } catch(e) { window.showToast("Error", "error"); }
+        });
+
+        // ================= SWATCHES =================
+        async function fetchProductsForDropdown() {
+            const snap = await getDocs(collection(db, "products"));
+            let html = '<option value="">Select Product...</option>';
+            snap.forEach(d => {
+                const pd = d.data();
+                html += `<option value="${d.id}">${pd.brand} - ${pd.name} ${pd.shade ? '('+pd.shade+')' : ''}</option>`;
+            });
+            document.getElementById('swatch-product').innerHTML = html;
+        }
+
+        async function fetchSwatches() {
+            try {
+                const snap = await getDocs(collection(db, "swatches"));
+                let swatchesData = [];
+                let html = '';
+                
+                // create a map for product names
+                const pMap = {};
+                productsData.forEach(p => pMap[p.id] = `${p.brand} ${p.name}`);
+
+                snap.forEach(d => {
+                    const data = d.data();
+                    swatchesData.push({id: d.id, ...data});
+                    const pName = pMap[data.productId] || 'Unknown Product';
+                    html += `<tr>
+                        <td><img src="${data.imageUrl || ''}" class="img-cell" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMCIgaGVpZ2h0PSIzMCI+PHJlY3Qgd2lkdGg9IjMwIiBoZWlnaHQ9IjMwIiBmaWxsPSIjZWVlIi8+PC9zdmc+'"></td>
+                        <td><div style="max-width:150px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;" title="${pName}">${pName}</div></td>
+                        <td>${data.shade || '-'}</td>
+                        <td style="font-size:12px;">${data.skinTone||'-'} / ${data.undertone||'-'}</td>
+                        <td>${data.visible ? '<span style="color:var(--success); font-size:12px">Visible</span>' : '<span style="color:var(--text-muted); font-size:12px">Hidden</span>'}</td>
+                        <td class="action-btns">
+                            <button class="btn-icon" style="color:var(--danger)" onclick="window.delDoc('swatches', '${d.id}', fetchSwatches)"><span class="material-symbols-rounded">delete</span></button>
+                        </td>
+                    </tr>`;
+                });
+                document.querySelector('#table-swatches tbody').innerHTML = html;
+            } catch(e) { console.error(e); }
+        }
+
+        document.getElementById('btn-save-swatch').addEventListener('click', async () => {
+            const pId = document.getElementById('swatch-product').value;
+            if(!pId) return window.showToast("Please select a product", "error");
+
+            const data = {
+                productId: pId,
+                imageUrl: document.getElementById('swatch-img').value,
+                shade: document.getElementById('swatch-shade').value,
+                skinTone: document.getElementById('swatch-skin').value,
+                undertone: document.getElementById('swatch-undertone').value,
+                lighting: document.getElementById('swatch-light').value,
+                notes: document.getElementById('swatch-notes').value,
+                visible: document.getElementById('swatch-visible').checked,
+                createdAt: serverTimestamp(),
+                likes: 0, views: 0, commentsCount: 0
+            };
+            try {
+                await addDoc(collection(db, "swatches"), data);
+                // Increment swatch count on product
+                await updateDoc(doc(db, "products", pId), { swatchCount: increment(1) });
+                window.showToast("Swatch saved!");
+                window.closeModal('modal-swatch');
+                fetchSwatches();
+            } catch(e) { window.showToast("Error", "error"); }
+        });
+
+        // Global Delete function
+        window.delDoc = async (col, id, callback) => {
+            if(!confirm("Are you sure you want to delete this?")) return;
+            try {
+                await deleteDoc(doc(db, col, id));
+                window.showToast("Deleted successfully");
+                callback();
+            } catch(e) { window.showToast("Error deleting", "error"); }
+        };
+
+    </script>
+</body>
+</html>
