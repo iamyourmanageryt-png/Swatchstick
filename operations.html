@@ -19,7 +19,7 @@
             --text-main: #111827;
             --text-muted: #6B7280;
             --text-light: #F9FAFB;
-            --primary: #9B536F; /* SwatchStick Brand Rose */
+            --primary: #9B536F;
             --primary-hover: #7E4058;
             --border: #E5E7EB;
             --danger: #EF4444;
@@ -119,7 +119,7 @@
             <button class="btn btn-primary" id="btn-one-tap" style="width: 100%; justify-content: center; font-size: 16px; padding: 12px;">
                 <span class="material-symbols-rounded">login</span> One-Tap Sign In
             </button>
-            <p style="font-size: 12px; margin-top: 16px; opacity: 0.7;">Secure anonymous authentication</p>
+            <p style="font-size: 12px; margin-top: 16px; opacity: 0.7;">Instant authenticated access</p>
         </div>
     </div>
 
@@ -153,7 +153,7 @@
         <!-- Main Content -->
         <main class="main-content">
             <header class="topbar">
-                <div style="font-weight: 500; color: var(--text-muted);">Database Connected: <span style="color: var(--success)">designsnap-f3309</span></div>
+                <div style="font-weight: 500; color: var(--text-muted);">Database: <span style="color: var(--success); font-weight: 600;">designsnap-f3309</span></div>
                 <button class="btn btn-secondary" id="btn-logout" style="padding: 6px 12px; font-size: 13px;">
                     <span class="material-symbols-rounded" style="font-size: 18px;">logout</span> Exit
                 </button>
@@ -183,7 +183,7 @@
                                 <input type="text" id="set-tagline" placeholder="Discover real swatches...">
                             </div>
                             <div class="form-group full">
-                                <label class="form-label">Logo URL (Leave blank for text logo)</label>
+                                <label class="form-label">Logo URL (Leave blank for default text logo)</label>
                                 <input type="text" id="set-logoUrl" placeholder="https://...">
                             </div>
                             <div class="form-group">
@@ -193,6 +193,10 @@
                             <div class="form-group">
                                 <label class="form-label">TikTok URL</label>
                                 <input type="text" id="set-tiktokUrl" placeholder="https://tiktok.com/...">
+                            </div>
+                            <div class="form-group full">
+                                <label class="form-label">Pinterest URL</label>
+                                <input type="text" id="set-pinterestUrl" placeholder="https://pinterest.com/...">
                             </div>
                         </div>
                     </div>
@@ -213,11 +217,11 @@
                                 </label>
                             </div>
                             <div class="form-group">
-                                <label class="form-label">Eyebrow (Small caps text)</label>
+                                <label class="form-label">Eyebrow (Small uppercase text)</label>
                                 <input type="text" id="hero-eyebrow" placeholder="REAL BEAUTY">
                             </div>
                             <div class="form-group">
-                                <label class="form-label">Main Title (HTML allowed for emphasis)</label>
+                                <label class="form-label">Main Title (HTML tags like &lt;em&gt; supported)</label>
                                 <input type="text" id="hero-title" placeholder="Beauty looks better...">
                             </div>
                             <div class="form-group full">
@@ -255,7 +259,7 @@
                             <thead>
                                 <tr><th>Name</th><th>Slug</th><th>Order</th><th>Status</th><th>Actions</th></tr>
                             </thead>
-                            <tbody><!-- Rendered via JS --></tbody>
+                            <tbody></tbody>
                         </table>
                     </div>
                 </div>
@@ -271,7 +275,7 @@
                             <thead>
                                 <tr><th>Image</th><th>Brand</th><th>Product Name</th><th>Category</th><th>Stats</th><th>Status</th><th>Actions</th></tr>
                             </thead>
-                            <tbody><!-- Rendered via JS --></tbody>
+                            <tbody></tbody>
                         </table>
                     </div>
                 </div>
@@ -285,9 +289,9 @@
                     <div class="card">
                         <table id="table-swatches">
                             <thead>
-                                <tr><th>Image</th><th>Product</th><th>Shade</th><th>Skin/Undertone</th><th>Status</th><th>Actions</th></tr>
+                                <tr><th>Image</th><th>Product</th><th>Shade</th><th>Skin / Undertone</th><th>Status</th><th>Actions</th></tr>
                             </thead>
-                            <tbody><!-- Rendered via JS --></tbody>
+                            <tbody></tbody>
                         </table>
                     </div>
                 </div>
@@ -316,7 +320,7 @@
                     <input type="text" id="cat-slug" placeholder="e.g. lip">
                 </div>
                 <div class="form-group">
-                    <label class="form-label">Display Order (Number)</label>
+                    <label class="form-label">Display Order</label>
                     <input type="number" id="cat-order" value="1">
                 </div>
                 <div class="form-group full">
@@ -351,7 +355,6 @@
                     <label class="form-label">Category</label>
                     <select id="prod-category">
                         <option value="">Select Category...</option>
-                        <!-- Injected -->
                     </select>
                 </div>
                 <div class="form-group">
@@ -400,7 +403,6 @@
                     <label class="form-label">Link to Product</label>
                     <select id="swatch-product" required>
                         <option value="">Select Product...</option>
-                        <!-- Injected -->
                     </select>
                 </div>
                 <div class="form-group full">
@@ -444,7 +446,7 @@
                 </div>
                 <div class="form-group full">
                     <label class="form-label">Notes</label>
-                    <textarea id="swatch-notes" rows="2" placeholder="User notes about formula, wear, etc."></textarea>
+                    <textarea id="swatch-notes" rows="2" placeholder="Formula notes, wear test results, texture..."></textarea>
                 </div>
                 <div class="form-group full">
                     <label class="checkbox-label"><input type="checkbox" id="swatch-visible" checked> Visible</label>
@@ -459,49 +461,86 @@
 
     <div id="toast-container"></div>
 
-    <!-- FIREBASE & LOGIC -->
+    <!-- ================= JAVASCRIPT ================= -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
         import { getAuth, signInAnonymously, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
         import { getFirestore, collection, doc, getDoc, getDocs, setDoc, addDoc, updateDoc, deleteDoc, increment, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
+        import { getDatabase } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-database.js";
 
+        // Updated Firebase Configuration
         const firebaseConfig = {
-            apiKey: "AIzaSyAZ_c3EaDxSZ6RrNrQjR_TauJHrPfk_lk",
+            apiKey: "AIzaSyAZ_c3EaDxSZ6RrNrwQjR_TauJHrPfk_lk",
             authDomain: "designsnap-f3309.firebaseapp.com",
+            databaseURL: "https://designsnap-f3309-default-rtdb.asia-southeast1.firebasedatabase.app",
             projectId: "designsnap-f3309",
-            storageBucket: "designsnap-f3309.appspot.com"
+            storageBucket: "designsnap-f3309.firebasestorage.app",
+            messagingSenderId: "741888249963",
+            appId: "1:741888249963:web:9540c9f68d6f0d5da9a12e",
+            measurementId: "G-YC8TDQF1MM"
         };
 
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getFirestore(app);
+        const realtimeDb = getDatabase(app);
 
-        // Global State Collections for dropdowns/joins
         let categoriesData = [];
         let productsData = [];
 
-        // UI Utils
-        window.showToast = (msg, type='success') => {
+        window.showToast = (msg, type = 'success') => {
             const c = document.getElementById('toast-container');
             const t = document.createElement('div');
             t.className = `toast ${type}`;
-            t.innerHTML = `<span class="material-symbols-rounded">${type==='success'?'check_circle':'error'}</span> ${msg}`;
+            t.innerHTML = `<span class="material-symbols-rounded">${type === 'success' ? 'check_circle' : 'error'}</span> ${msg}`;
             c.appendChild(t);
             setTimeout(() => t.remove(), 3000);
         };
 
         window.openModal = (id) => {
             document.getElementById(id).classList.add('active');
-            // Reset forms if opening without passing data
-            if(id === 'modal-category') { document.getElementById('cat-id').value = ''; document.getElementById('cat-name').value=''; document.getElementById('cat-slug').value=''; }
-            if(id === 'modal-product') { document.getElementById('prod-id').value = ''; document.getElementById('prod-brand').value=''; document.getElementById('prod-name').value=''; }
-            if(id === 'modal-swatch') { document.getElementById('swatch-id').value = ''; document.getElementById('swatch-img').value=''; }
+            if (id === 'modal-category') {
+                document.getElementById('cat-id').value = '';
+                document.getElementById('cat-name').value = '';
+                document.getElementById('cat-slug').value = '';
+                document.getElementById('cat-order').value = '1';
+                document.getElementById('cat-visible').checked = true;
+                document.getElementById('cat-modal-title').innerText = 'Add Category';
+            }
+            if (id === 'modal-product') {
+                document.getElementById('prod-id').value = '';
+                document.getElementById('prod-brand').value = '';
+                document.getElementById('prod-name').value = '';
+                document.getElementById('prod-category').value = '';
+                document.getElementById('prod-shade').value = '';
+                document.getElementById('prod-img').value = '';
+                document.getElementById('prod-desc').value = '';
+                document.getElementById('prod-price').value = '';
+                document.getElementById('prod-url').value = '';
+                document.getElementById('prod-visible').checked = true;
+                document.getElementById('prod-trending').checked = false;
+                document.getElementById('prod-featured').checked = false;
+                document.getElementById('prod-modal-title').innerText = 'Add Product';
+            }
+            if (id === 'modal-swatch') {
+                document.getElementById('swatch-id').value = '';
+                document.getElementById('swatch-product').value = '';
+                document.getElementById('swatch-img').value = '';
+                document.getElementById('swatch-shade').value = '';
+                document.getElementById('swatch-skin').value = '';
+                document.getElementById('swatch-undertone').value = '';
+                document.getElementById('swatch-light').value = '';
+                document.getElementById('swatch-notes').value = '';
+                document.getElementById('swatch-visible').checked = true;
+                document.getElementById('swatch-modal-title').innerText = 'Add Swatch';
+            }
         };
+
         window.closeModal = (id) => document.getElementById(id).classList.remove('active');
 
-        // Navigation
+        // Navigation Menu
         document.querySelectorAll('.nav-item').forEach(el => {
-            el.addEventListener('click', (e) => {
+            el.addEventListener('click', () => {
                 document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
                 document.querySelectorAll('.view-section').forEach(v => v.classList.remove('active'));
                 el.classList.add('active');
@@ -510,40 +549,47 @@
             });
         });
 
-        // Auth Logic
+        // Auth Operations
         document.getElementById('btn-one-tap').addEventListener('click', async () => {
             try {
                 await signInAnonymously(auth);
-            } catch(e) { window.showToast("Auth failed: " + e.message, "error"); }
+            } catch(e) { 
+                window.showToast("Authentication failed: " + e.message, "error"); 
+            }
         });
 
         document.getElementById('btn-logout').addEventListener('click', () => signOut(auth));
 
         onAuthStateChanged(auth, (user) => {
-            if(user) {
+            if (user) {
                 document.getElementById('auth-screen').style.display = 'none';
                 document.getElementById('app-layout').style.display = 'flex';
-                loadViewData('view-settings'); // load default
+                loadViewData('view-settings');
             } else {
                 document.getElementById('auth-screen').style.display = 'flex';
                 document.getElementById('app-layout').style.display = 'none';
             }
         });
 
-        // Routing & Data Loaders
         async function loadViewData(viewId) {
-            if(viewId === 'view-settings') await fetchSettings();
-            if(viewId === 'view-hero') await fetchHero();
-            if(viewId === 'view-categories') await fetchCategories();
-            if(viewId === 'view-products') { await fetchCategoriesForDropdown(); await fetchProducts(); }
-            if(viewId === 'view-swatches') { await fetchProductsForDropdown(); await fetchSwatches(); }
+            if (viewId === 'view-settings') await fetchSettings();
+            if (viewId === 'view-hero') await fetchHero();
+            if (viewId === 'view-categories') await fetchCategories();
+            if (viewId === 'view-products') { 
+                await fetchCategoriesForDropdown(); 
+                await fetchProducts(); 
+            }
+            if (viewId === 'view-swatches') { 
+                await fetchProductsForDropdown(); 
+                await fetchSwatches(); 
+            }
         }
 
         // ================= SITE SETTINGS =================
         async function fetchSettings() {
             try {
                 const snap = await getDoc(doc(db, "siteSettings", "general"));
-                if(snap.exists()) {
+                if (snap.exists()) {
                     const d = snap.data();
                     document.getElementById('set-brandName').value = d.brandName || '';
                     document.getElementById('set-contactEmail').value = d.contactEmail || '';
@@ -551,9 +597,11 @@
                     document.getElementById('set-logoUrl').value = d.logoUrl || '';
                     document.getElementById('set-instagramUrl').value = d.instagramUrl || '';
                     document.getElementById('set-tiktokUrl').value = d.tiktokUrl || '';
+                    document.getElementById('set-pinterestUrl').value = d.pinterestUrl || '';
                 }
             } catch(e) { console.error(e); }
         }
+
         document.getElementById('btn-save-settings').addEventListener('click', async () => {
             try {
                 await setDoc(doc(db, "siteSettings", "general"), {
@@ -562,17 +610,20 @@
                     tagline: document.getElementById('set-tagline').value,
                     logoUrl: document.getElementById('set-logoUrl').value,
                     instagramUrl: document.getElementById('set-instagramUrl').value,
-                    tiktokUrl: document.getElementById('set-tiktokUrl').value
+                    tiktokUrl: document.getElementById('set-tiktokUrl').value,
+                    pinterestUrl: document.getElementById('set-pinterestUrl').value
                 }, { merge: true });
-                window.showToast("Settings saved!");
-            } catch(e) { window.showToast("Error saving", "error"); }
+                window.showToast("Settings saved successfully!");
+            } catch(e) { 
+                window.showToast("Error saving settings", "error"); 
+            }
         });
 
         // ================= HERO =================
         async function fetchHero() {
             try {
                 const snap = await getDoc(doc(db, "homepage", "hero"));
-                if(snap.exists()) {
+                if (snap.exists()) {
                     const d = snap.data();
                     document.getElementById('hero-enabled').checked = d.enabled !== false;
                     document.getElementById('hero-eyebrow').value = d.eyebrow || '';
@@ -585,6 +636,7 @@
                 }
             } catch(e) { console.error(e); }
         }
+
         document.getElementById('btn-save-hero').addEventListener('click', async () => {
             try {
                 await setDoc(doc(db, "homepage", "hero"), {
@@ -597,8 +649,10 @@
                     imageUrl: document.getElementById('hero-img').value,
                     secondaryImageUrl: document.getElementById('hero-secImg').value
                 }, { merge: true });
-                window.showToast("Hero saved!");
-            } catch(e) { window.showToast("Error saving", "error"); }
+                window.showToast("Hero section saved!");
+            } catch(e) { 
+                window.showToast("Error saving hero", "error"); 
+            }
         });
 
         // ================= CATEGORIES =================
@@ -627,7 +681,7 @@
 
         window.editCategory = (id) => {
             const cat = categoriesData.find(c => c.id === id);
-            if(!cat) return;
+            if (!cat) return;
             document.getElementById('cat-id').value = cat.id;
             document.getElementById('cat-name').value = cat.name || '';
             document.getElementById('cat-slug').value = cat.slug || '';
@@ -646,12 +700,17 @@
                 visible: document.getElementById('cat-visible').checked
             };
             try {
-                if(id) { await updateDoc(doc(db, "categories", id), data); }
-                else { await addDoc(collection(db, "categories"), data); }
+                if (id) { 
+                    await updateDoc(doc(db, "categories", id), data); 
+                } else { 
+                    await addDoc(collection(db, "categories"), data); 
+                }
                 window.showToast("Category saved");
                 window.closeModal('modal-category');
                 fetchCategories();
-            } catch(e) { window.showToast("Error", "error"); }
+            } catch(e) { 
+                window.showToast("Error saving category", "error"); 
+            }
         });
 
         // ================= PRODUCTS =================
@@ -675,9 +734,9 @@
                     html += `<tr>
                         <td><img src="${data.imageUrl || ''}" class="img-cell" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMCIgaGVpZ2h0PSIzMCI+PHJlY3Qgd2lkdGg9IjMwIiBoZWlnaHQ9IjMwIiBmaWxsPSIjZWVlIi8+PC9zdmc+'"></td>
                         <td>${data.brand || ''}</td>
-                        <td style="font-weight:500;">${data.name || ''}<div style="font-size:11px;color:var(--text-muted);font-weight:400">${data.shade||''}</div></td>
+                        <td style="font-weight:500;">${data.name || ''}<div style="font-size:11px;color:var(--text-muted);font-weight:400">${data.shade || ''}</div></td>
                         <td>${data.category || ''}</td>
-                        <td style="font-size:12px; color:var(--text-muted)">♥ ${data.likes||0} | 👁 ${data.views||0} | 🎨 ${data.swatchCount||0}</td>
+                        <td style="font-size:12px; color:var(--text-muted)">♥ ${data.likes || 0} | 👁 ${data.views || 0} | 🎨 ${data.swatchCount || 0}</td>
                         <td>
                             ${data.visible ? '<span style="color:var(--success); font-size:12px">Visible</span>' : '<span style="color:var(--text-muted); font-size:12px">Hidden</span>'}
                             ${data.trending ? '<br><span style="color:var(--primary); font-size:11px">Trending</span>' : ''}
@@ -694,7 +753,7 @@
 
         window.editProduct = (id) => {
             const p = productsData.find(x => x.id === id);
-            if(!p) return;
+            if (!p) return;
             document.getElementById('prod-id').value = p.id;
             document.getElementById('prod-brand').value = p.brand || '';
             document.getElementById('prod-name').value = p.name || '';
@@ -728,16 +787,22 @@
                 updatedAt: serverTimestamp()
             };
             try {
-                if(id) { await updateDoc(doc(db, "products", id), data); }
-                else {
+                if (id) { 
+                    await updateDoc(doc(db, "products", id), data); 
+                } else {
                     data.createdAt = serverTimestamp();
-                    data.likes = 0; data.views = 0; data.swatchCount = 0; data.commentsCount = 0;
+                    data.likes = 0; 
+                    data.views = 0; 
+                    data.swatchCount = 0; 
+                    data.commentsCount = 0;
                     await addDoc(collection(db, "products"), data);
                 }
                 window.showToast("Product saved");
                 window.closeModal('modal-product');
                 fetchProducts();
-            } catch(e) { window.showToast("Error", "error"); }
+            } catch(e) { 
+                window.showToast("Error saving product", "error"); 
+            }
         });
 
         // ================= SWATCHES =================
@@ -746,7 +811,7 @@
             let html = '<option value="">Select Product...</option>';
             snap.forEach(d => {
                 const pd = d.data();
-                html += `<option value="${d.id}">${pd.brand} - ${pd.name} ${pd.shade ? '('+pd.shade+')' : ''}</option>`;
+                html += `<option value="${d.id}">${pd.brand} - ${pd.name} ${pd.shade ? '(' + pd.shade + ')' : ''}</option>`;
             });
             document.getElementById('swatch-product').innerHTML = html;
         }
@@ -754,22 +819,19 @@
         async function fetchSwatches() {
             try {
                 const snap = await getDocs(collection(db, "swatches"));
-                let swatchesData = [];
                 let html = '';
                 
-                // create a map for product names
                 const pMap = {};
                 productsData.forEach(p => pMap[p.id] = `${p.brand} ${p.name}`);
 
                 snap.forEach(d => {
                     const data = d.data();
-                    swatchesData.push({id: d.id, ...data});
                     const pName = pMap[data.productId] || 'Unknown Product';
                     html += `<tr>
                         <td><img src="${data.imageUrl || ''}" class="img-cell" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMCIgaGVpZ2h0PSIzMCI+PHJlY3Qgd2lkdGg9IjMwIiBoZWlnaHQ9IjMwIiBmaWxsPSIjZWVlIi8+PC9zdmc+'"></td>
-                        <td><div style="max-width:150px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;" title="${pName}">${pName}</div></td>
+                        <td><div style="max-width:180px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;" title="${pName}">${pName}</div></td>
                         <td>${data.shade || '-'}</td>
-                        <td style="font-size:12px;">${data.skinTone||'-'} / ${data.undertone||'-'}</td>
+                        <td style="font-size:12px;">${data.skinTone || '-'} / ${data.undertone || '-'}</td>
                         <td>${data.visible ? '<span style="color:var(--success); font-size:12px">Visible</span>' : '<span style="color:var(--text-muted); font-size:12px">Hidden</span>'}</td>
                         <td class="action-btns">
                             <button class="btn-icon" style="color:var(--danger)" onclick="window.delDoc('swatches', '${d.id}', fetchSwatches)"><span class="material-symbols-rounded">delete</span></button>
@@ -782,7 +844,7 @@
 
         document.getElementById('btn-save-swatch').addEventListener('click', async () => {
             const pId = document.getElementById('swatch-product').value;
-            if(!pId) return window.showToast("Please select a product", "error");
+            if (!pId) return window.showToast("Please select a product", "error");
 
             const data = {
                 productId: pId,
@@ -794,26 +856,31 @@
                 notes: document.getElementById('swatch-notes').value,
                 visible: document.getElementById('swatch-visible').checked,
                 createdAt: serverTimestamp(),
-                likes: 0, views: 0, commentsCount: 0
+                likes: 0, 
+                views: 0, 
+                commentsCount: 0
             };
             try {
                 await addDoc(collection(db, "swatches"), data);
-                // Increment swatch count on product
                 await updateDoc(doc(db, "products", pId), { swatchCount: increment(1) });
                 window.showToast("Swatch saved!");
                 window.closeModal('modal-swatch');
                 fetchSwatches();
-            } catch(e) { window.showToast("Error", "error"); }
+            } catch(e) { 
+                window.showToast("Error saving swatch", "error"); 
+            }
         });
 
-        // Global Delete function
+        // Global Delete Helper
         window.delDoc = async (col, id, callback) => {
-            if(!confirm("Are you sure you want to delete this?")) return;
+            if (!confirm("Are you sure you want to delete this item?")) return;
             try {
                 await deleteDoc(doc(db, col, id));
                 window.showToast("Deleted successfully");
                 callback();
-            } catch(e) { window.showToast("Error deleting", "error"); }
+            } catch(e) { 
+                window.showToast("Error deleting document", "error"); 
+            }
         };
 
     </script>
