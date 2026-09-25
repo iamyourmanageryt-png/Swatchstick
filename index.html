@@ -86,11 +86,12 @@
            ========================================================================== */
         @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
         @keyframes heartPop { 0% { transform: scale(1); } 50% { transform: scale(1.4); } 100% { transform: scale(1); } }
-        @keyframes sparkleScale { 0%, 100% { transform: scale(1); opacity: 0.8; } 50% { transform: scale(1.5); opacity: 1; } }
         @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes floatUpFade { 0% { transform: translateY(0) scale(0.5); opacity: 1; } 50% { transform: translateY(-40px) scale(1.2); opacity: 0.8; } 100% { transform: translateY(-80px) scale(1.5); opacity: 0; } }
 
         .animate-heart { animation: heartPop 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); color: var(--primary); font-variation-settings: 'FILL' 1; }
         .floating { animation: float 4s ease-in-out infinite; }
+        .floating-heart { position: fixed; color: var(--primary); font-variation-settings: 'FILL' 1; font-size: 2.5rem; pointer-events: none; z-index: 9999; animation: floatUpFade 1s ease-out forwards; }
         
         .sparkle-bg { position: fixed; inset: 0; pointer-events: none; z-index: -1; background-image: radial-gradient(var(--primary-light) 1px, transparent 1px); background-size: 40px 40px; opacity: 0.3; }
 
@@ -133,8 +134,20 @@
         }
         .btn-icon:hover { background: var(--primary-light); color: var(--primary); transform: scale(1.1); box-shadow: var(--shadow-md); }
 
+        .skeleton {
+            background: linear-gradient(90deg, var(--primary-light) 25%, var(--border) 50%, var(--primary-light) 75%);
+            background-size: 200% 100%;
+            animation: skeletonLoading 1.5s infinite;
+            border-radius: var(--radius-sm);
+        }
+        @keyframes skeletonLoading { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+
         .empty-state { text-align: center; padding: 60px 20px; color: var(--text-muted); animation: slideUp 0.5s ease; }
         .empty-state h3 { font-size: 1.8rem; margin-bottom: 12px; color: var(--text-main); }
+
+        .section-header { margin-bottom: 32px; display: flex; justify-content: space-between; align-items: flex-end; }
+        .section-title { font-size: 2.2rem; }
+        .section-subtitle { color: var(--primary); font-size: 1rem; margin-top: 4px; font-weight: 500; }
 
         /* ==========================================================================
            HEADER
@@ -170,15 +183,13 @@
         /* ==========================================================================
            PRODUCT CARDS & GRIDS
            ========================================================================== */
-        .section-header { margin: 60px 0 30px; text-align: center; }
-        .section-title { font-size: 2.8rem; margin-bottom: 8px; }
-        .section-subtitle { color: var(--primary); font-size: 1.1rem; font-weight: 600; }
+        .section-header.center { margin: 60px 0 30px; text-align: center; justify-content: center; flex-direction: column; align-items: center; }
+        .section-header.center .section-title { font-size: 2.8rem; margin-bottom: 8px; }
 
         .product-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 24px; }
         .product-card { background: var(--bg-surface); border-radius: var(--radius-md); overflow: hidden; border: 1px solid var(--border); box-shadow: var(--shadow-sm); transition: var(--transition); cursor: pointer; display: flex; flex-direction: column; }
         .product-card:hover { transform: translateY(-8px); box-shadow: var(--shadow-lg); border-color: var(--primary); }
         
-        /* Fixed Cropping: Use contain inside a unified background */
         .product-image-wrap { position: relative; aspect-ratio: 1/1; background: var(--bg-base); padding: 20px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: center; overflow: hidden; }
         .product-image-wrap img { width: 100%; height: 100%; object-fit: contain; transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94); }
         .product-card:hover .product-image-wrap img { transform: scale(1.1); }
@@ -248,7 +259,7 @@
         /* Real Swatches Grid in Panel */
         .panel-swatch-section { padding: 40px 32px; background: var(--bg-base); border-top: 1px solid var(--border); }
         .swatch-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; margin-top: 24px; }
-        .swatch-card { border-radius: var(--radius-md); overflow: hidden; position: relative; aspect-ratio: 3/4; cursor: pointer; box-shadow: var(--shadow-sm); transition: 0.3s; border: 2px solid transparent; }
+        .swatch-card { border-radius: var(--radius-md); overflow: hidden; position: relative; aspect-ratio: 3/4; cursor: pointer; box-shadow: var(--shadow-sm); transition: 0.3s; border: 2px solid transparent; background: var(--primary-light); }
         .swatch-card:hover { transform: translateY(-4px) scale(1.02); box-shadow: var(--shadow-md); border-color: var(--primary); }
         .swatch-card img { width: 100%; height: 100%; object-fit: cover; }
         .swatch-card-overlay { position: absolute; bottom: 0; left: 0; width: 100%; padding: 20px 16px 12px; background: linear-gradient(to top, rgba(0,0,0,0.8), transparent); color: #FFF; font-size: 0.85rem; font-weight: 600; text-shadow: 0 2px 4px rgba(0,0,0,0.5); }
@@ -286,7 +297,6 @@
         .auth-switch { text-align: center; margin-top: 24px; font-size: 0.95rem; color: var(--text-muted); }
         .auth-switch button, .auth-switch a { color: var(--primary); font-weight: 700; text-decoration: underline; background: none; border: none; cursor: pointer; font-size: inherit; }
 
-        /* Profile Editing */
         .profile-avatar-large { width: 120px; height: 120px; border-radius: 50%; background: linear-gradient(135deg, var(--primary-light), var(--primary)); margin: 0 auto 24px; display: flex; align-items: center; justify-content: center; font-size: 3rem; color: #FFF; font-weight: 700; overflow: hidden; border: 4px solid var(--bg-surface); box-shadow: var(--shadow-md); position: relative; }
         .profile-avatar-large img { width: 100%; height: 100%; object-fit: cover; }
         
@@ -313,9 +323,9 @@
 
         @media (max-width: 768px) {
             .nav-links { display: none; }
-            .hero { padding: 40px 0; }
+            .hero { padding: 40px 0; min-height: 40vh; }
             .hero-title { font-size: 2.8rem; }
-            .hero-visual { height: 320px; }
+            .hero-visual { height: 300px; }
             .product-grid { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 16px; }
             .side-panel { width: 100%; max-width: 100%; }
             .search-input-wrapper input { font-size: 1.5rem; padding-left: 20px; }
@@ -349,16 +359,16 @@
             </nav>
             
             <div class="nav-actions">
-                <button class="btn-icon" id="btn-theme-toggle" aria-label="Toggle Theme">
+                <button class="btn-icon" id="btn-theme-toggle" title="Toggle Theme">
                     <span class="material-symbols-rounded" id="theme-icon">dark_mode</span>
                 </button>
-                <button class="btn-icon" id="btn-search-open" aria-label="Search">
+                <button class="btn-icon" onclick="window.Modals.open('search-overlay')" title="Search">
                     <span class="material-symbols-rounded">search</span>
                 </button>
-                <button class="btn-icon" id="btn-wishlist-header" aria-label="Wishlist">
+                <button class="btn-icon" id="btn-wishlist-header" title="My Wishlist">
                     <span class="material-symbols-rounded">favorite</span>
                 </button>
-                <button class="btn-icon" id="btn-profile" aria-label="Account">
+                <button class="btn-icon" id="btn-profile" title="Account">
                     <span class="material-symbols-rounded">person</span>
                 </button>
             </div>
@@ -387,7 +397,7 @@
         <!-- ================= TRENDING ================= -->
         <section id="trending">
             <div class="container">
-                <div class="section-header">
+                <div class="section-header center">
                     <h2 class="section-title" id="trending-title">Trending Now</h2>
                     <p class="section-subtitle" id="trending-subtitle">The most loved shades right now</p>
                 </div>
@@ -403,7 +413,7 @@
         <!-- ================= DISCOVER ================= -->
         <section id="discover">
             <div class="container">
-                <div class="section-header">
+                <div class="section-header center">
                     <h2 class="section-title">Discover</h2>
                     <p class="section-subtitle">Real beauty in every finish</p>
                 </div>
@@ -444,7 +454,7 @@
         <button class="mobile-nav-item active" onclick="window.scrollTo({top:0, behavior:'smooth'})">
             <span class="material-symbols-rounded">home</span><span>Home</span>
         </button>
-        <button class="mobile-nav-item" onclick="Modals.open('search-overlay')">
+        <button class="mobile-nav-item" onclick="window.Modals.open('search-overlay')">
             <span class="material-symbols-rounded">search</span><span>Search</span>
         </button>
         <button class="mobile-nav-item" id="btn-mobile-wishlist">
@@ -461,7 +471,7 @@
 
     <!-- Search Overlay -->
     <div class="overlay" id="search-overlay">
-        <button class="btn-icon modal-close" onclick="Modals.close('search-overlay')"><span class="material-symbols-rounded">close</span></button>
+        <button class="btn-icon modal-close" onclick="window.Modals.close('search-overlay')"><span class="material-symbols-rounded">close</span></button>
         <div class="search-container">
             <div class="search-input-wrapper">
                 <input type="text" id="search-input" placeholder="Search brands, products, shades..." autocomplete="off">
@@ -474,7 +484,7 @@
     <!-- Auth / Profile Modal -->
     <div class="overlay" id="auth-overlay">
         <div class="modal-box">
-            <button class="btn-icon modal-close" onclick="Modals.close('auth-overlay')" style="top:16px; right:16px;"><span class="material-symbols-rounded">close</span></button>
+            <button class="btn-icon modal-close" onclick="window.Modals.close('auth-overlay')" style="top:16px; right:16px;"><span class="material-symbols-rounded">close</span></button>
             
             <!-- Login -->
             <div id="login-view">
@@ -549,7 +559,7 @@
     <div class="overlay panel-overlay" id="product-overlay">
         <div class="side-panel">
             <div class="panel-header">
-                <button class="btn-icon" onclick="Modals.close('product-overlay')"><span class="material-symbols-rounded">close</span></button>
+                <button class="btn-icon" onclick="window.Modals.close('product-overlay')"><span class="material-symbols-rounded">close</span></button>
                 <div style="display:flex;gap:12px;">
                     <button class="btn-icon" id="btn-prod-share"><span class="material-symbols-rounded">ios_share</span></button>
                     <button class="btn-icon" id="btn-prod-save"><span class="material-symbols-rounded" id="icon-prod-save">bookmark_border</span></button>
@@ -570,7 +580,7 @@
             <div class="sv-info-area">
                 <div style="display:flex; justify-content:space-between; margin-bottom: 24px;">
                     <button class="btn-icon" id="btn-swatch-share"><span class="material-symbols-rounded">ios_share</span></button>
-                    <button class="btn-icon" onclick="Modals.close('swatch-overlay')"><span class="material-symbols-rounded">close</span></button>
+                    <button class="btn-icon" onclick="window.Modals.close('swatch-overlay')"><span class="material-symbols-rounded">close</span></button>
                 </div>
                 <div id="sv-details"></div>
             </div>
@@ -581,7 +591,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
         import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword, sendPasswordResetEmail, signOut, updateProfile } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
-        import { getFirestore, collection, doc, getDoc, getDocs, query, where, setDoc, updateDoc, increment, deleteDoc } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
+        import { getFirestore, collection, doc, getDoc, getDocs, query, where, setDoc, updateDoc, increment, deleteDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
 
         // Required Firebase Configuration
         const firebaseConfig = {
@@ -608,7 +618,8 @@
         const initTheme = () => {
             const savedTheme = localStorage.getItem('theme') || 'light';
             document.documentElement.setAttribute('data-theme', savedTheme);
-            document.getElementById('theme-icon').innerText = savedTheme === 'dark' ? 'light_mode' : 'dark_mode';
+            const icon = document.getElementById('theme-icon');
+            if(icon) icon.innerText = savedTheme === 'dark' ? 'light_mode' : 'dark_mode';
         };
         document.getElementById('btn-theme-toggle').addEventListener('click', () => {
             const current = document.documentElement.getAttribute('data-theme');
@@ -619,22 +630,8 @@
         });
         initTheme();
 
-        // Utilities
-        const formatCurrency = (val) => {
-            if(!val) return '';
-            const str = String(val).trim();
-            if (/^[^\d]/.test(str)) return str; 
-            return `₹${str}`;
-        };
-        const formatCount = (num) => {
-            if (!num) return '0';
-            if (num >= 1000000) return (num / 1000000).toFixed(1) + 'M';
-            if (num >= 1000) return (num / 1000).toFixed(1) + 'k';
-            return num.toString();
-        };
-        const getPlaceholderSvg = () => `data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0MDAiIGhlaWdodD0iNDAwIiB2aWV3Qm94PSIwIDAgNDAwIDQwMCI+PHJlY3Qgd2lkdGg9IjQwMCIgaGVpZ2h0PSI0MDAiIGZpbGw9IiNGOERERTUiLz48cGF0aCBkPSJNMjAwIDE4MGMtMTEgMC0yMCA5LTIwIDIwczkgMjAgMjAgMjAgMjAtOSAyMC0yMC05LTIwLTIwLTIwem0wIDU1Yy0yMiAwLTYwIDExLTYwIDMzdi41YzAgNSAzIDExIDYgMTVoMTA4YzMgNCA2IDEwIDYtMTV2LS41YzAtMjItMzgtMzMtNjAtMzN6IiBmaWxsPSIjOUI1MzZGIi8+PC9zdmc+`;
-
-        const Modals = {
+        // Global Utility Exports
+        window.Modals = {
             open: (id) => { document.getElementById(id).classList.add('active'); document.body.style.overflow = 'hidden'; },
             close: (id) => { document.getElementById(id).classList.remove('active'); document.body.style.overflow = ''; },
             closeAll: () => { document.querySelectorAll('.overlay').forEach(el => el.classList.remove('active')); document.body.style.overflow = ''; }
@@ -650,9 +647,33 @@
         };
 
         window.requireAuth = () => {
-            if (!currentUser) { Modals.open('auth-overlay'); return false; }
+            if (!currentUser) { window.Modals.open('auth-overlay'); return false; }
             return true;
         };
+
+        window.spawnFloatingHeart = (x, y) => {
+            const heart = document.createElement('span');
+            heart.className = 'material-symbols-rounded floating-heart';
+            heart.innerText = 'favorite';
+            heart.style.left = `${x - 20}px`; heart.style.top = `${y - 20}px`;
+            document.body.appendChild(heart);
+            setTimeout(() => heart.remove(), 1000);
+        };
+
+        const formatCurrency = (val) => {
+            if(!val) return '';
+            const str = String(val).trim();
+            return /^[^\d]/.test(str) ? str : `₹${str}`;
+        };
+
+        const formatCount = (num) => {
+            if (!num) return '0';
+            if (num >= 1000000) return (num / 1000000).toFixed(1) + 'M';
+            if (num >= 1000) return (num / 1000).toFixed(1) + 'k';
+            return num.toString();
+        };
+
+        const getPlaceholderSvg = () => `data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0MDAiIGhlaWdodD0iNDAwIiB2aWV3Qm94PSIwIDAgNDAwIDQwMCI+PHJlY3Qgd2lkdGg9IjQwMCIgaGVpZ2h0PSI0MDAiIGZpbGw9IiNGOERERTUiLz48cGF0aCBkPSJNMjAwIDE4MGMtMTEgMC0yMCA5LTIwIDIwczkgMjAgMjAgMjAgMjAtOSAyMC0yMC05LTIwLTIwLTIwem0wIDU1Yy0yMiAwLTYwIDExLTYwIDMzdi41YzAgNSAzIDExIDYgMTVoMTA4YzMgNCA2IDEwIDYtMTV2LS41YzAtMjItMzgtMzMtNjAtMzN6IiBmaWxsPSIjOUI1MzZGIi8+PC9zdmc+`;
 
         // Core Init
         async function init() {
@@ -735,7 +756,10 @@
                 allVisibleProducts = [];
                 snap.forEach(doc => allVisibleProducts.push({ id: doc.id, ...doc.data() }));
                 renderTrending(); renderDiscover(null);
-            } catch (err) {}
+            } catch (err) {
+                console.error(err);
+                window.showToast("Cannot load products right now.", "error");
+            }
         }
 
         function renderTrending() {
@@ -770,14 +794,13 @@
             renderDiscover(slug);
         };
 
-        // Click handler decoupling for search
         window.handleSearchResultClick = (id) => {
-            Modals.close('search-overlay');
+            window.Modals.close('search-overlay');
             setTimeout(() => window.openProduct(id), 100);
         };
 
         window.openProduct = async (id) => {
-            Modals.open('product-overlay');
+            window.Modals.open('product-overlay');
             const panel = document.getElementById('product-panel-content');
             panel.innerHTML = `<div style="padding:40px; text-align:center;"><div class="skeleton" style="width:100%; aspect-ratio:1/1;"></div></div>`;
             
@@ -834,7 +857,7 @@
                     <div class="panel-swatch-section">
                         <h3 style="font-family:var(--font-serif); font-size:2rem; color:var(--text-main);">Community Swatches ✨</h3>
                         ${currentProductSwatches.length === 0 ? 
-                            `<div class="empty-state" style="padding:20px 0;"><p>Be the first to upload a swatch!</p></div>` : 
+                            `<div class="empty-state" style="padding:20px 0;"><p>Be the first to see swatches!</p></div>` : 
                             `<div class="swatch-grid">
                                 ${currentProductSwatches.map((swatch, idx) => `
                                     <div class="swatch-card" onclick="window.openSwatchViewer(${idx})">
@@ -861,14 +884,14 @@
             const urlParams = new URLSearchParams(window.location.search); urlParams.set('swatch', swatch.id);
             window.history.pushState({}, '', `?${urlParams.toString()}`);
 
-            Modals.open('swatch-overlay');
+            window.Modals.open('swatch-overlay');
             
             let imgs = [];
             if(swatch.imageUrls && swatch.imageUrls.length > 0) imgs = swatch.imageUrls;
             else if(swatch.imageUrl) imgs = [swatch.imageUrl];
             else imgs = [getPlaceholderSvg()];
 
-            document.getElementById('sv-image').src = imgs[0]; // Simple single image view for now
+            document.getElementById('sv-image').src = imgs[0]; // Simple single image view
 
             let isLiked = false;
             if(currentUser) { const snap = await getDoc(doc(db, "users", currentUser.uid, "likes", swatch.id)); isLiked = snap.exists(); }
@@ -897,7 +920,6 @@
 
         document.getElementById('btn-swatch-next').addEventListener('click', () => { if(currentProductSwatches.length) window.openSwatchViewer((currentSwatchIndex + 1) % currentProductSwatches.length); });
         document.getElementById('btn-swatch-prev').addEventListener('click', () => { if(currentProductSwatches.length) window.openSwatchViewer((currentSwatchIndex - 1 + currentProductSwatches.length) % currentProductSwatches.length); });
-        document.getElementById('btn-swatch-close').addEventListener('click', () => { Modals.close('swatch-overlay'); const urlParams = new URLSearchParams(window.location.search); urlParams.delete('swatch'); window.history.pushState({}, '', `?${urlParams.toString()}`); });
 
         // Search Logic
         let searchTimeout;
@@ -950,26 +972,18 @@
             document.getElementById('profile-edit-form').style.display = 'none';
         }
 
-        // View Toggles
         document.getElementById('btn-show-signup').addEventListener('click', () => viewManager('signup-view'));
         document.getElementById('btn-show-login').addEventListener('click', () => viewManager('login-view'));
         document.getElementById('btn-show-reset').addEventListener('click', () => viewManager('reset-view'));
         document.getElementById('btn-back-login').addEventListener('click', () => viewManager('login-view'));
         
-        document.getElementById('btn-profile').addEventListener('click', () => {
-            Modals.open('auth-overlay');
-            if(currentUser) viewManager('profile-view');
-        });
-        document.getElementById('btn-mobile-profile').addEventListener('click', () => {
-            Modals.open('auth-overlay');
-            if(currentUser) viewManager('profile-view');
-        });
+        document.getElementById('btn-profile').addEventListener('click', () => { window.Modals.open('auth-overlay'); if(currentUser) viewManager('profile-view'); });
+        document.getElementById('btn-mobile-profile').addEventListener('click', () => { window.Modals.open('auth-overlay'); if(currentUser) viewManager('profile-view'); });
 
-        // Forms
         document.getElementById('login-form').addEventListener('submit', async (e) => {
             e.preventDefault(); const btn = e.target.querySelector('button'); btn.disabled=true; btn.innerText='Logging in...';
-            try { await signInWithEmailAndPassword(auth, document.getElementById('login-email').value, document.getElementById('login-password').value); Modals.close('auth-overlay'); showToast("Welcome back!"); }
-            catch (err) { showToast(err.message.replace('Firebase: ', ''), "error"); }
+            try { await signInWithEmailAndPassword(auth, document.getElementById('login-email').value, document.getElementById('login-password').value); window.Modals.close('auth-overlay'); window.showToast("Welcome back!"); }
+            catch (err) { window.showToast(err.message.replace('Firebase: ', ''), "error"); }
             btn.disabled=false; btn.innerText='Log In';
         });
 
@@ -980,9 +994,9 @@
                 const avatar = document.getElementById('signup-avatar').value;
                 const name = document.getElementById('signup-name').value;
                 await updateProfile(cred.user, { displayName: name, photoURL: avatar });
-                await setDoc(doc(db, "users", cred.user.uid), { displayName: name, photoURL: avatar, email: cred.user.email, createdAt: new Date() });
-                Modals.close('auth-overlay'); showToast("Profile created! Welcome to SwatchStick 🎀");
-            } catch (err) { showToast(err.message.replace('Firebase: ', ''), "error"); }
+                await setDoc(doc(db, "users", cred.user.uid), { displayName: name, photoURL: avatar, email: cred.user.email, createdAt: serverTimestamp() }, { merge: true });
+                window.Modals.close('auth-overlay'); window.showToast("Profile created! Welcome to SwatchStick 🎀");
+            } catch (err) { window.showToast(err.message.replace('Firebase: ', ''), "error"); }
             btn.disabled=false; btn.innerText='Create Account';
         });
 
@@ -990,12 +1004,12 @@
             e.preventDefault(); const btn = e.target.querySelector('button'); btn.disabled=true;
             try {
                 await sendPasswordResetEmail(auth, document.getElementById('reset-email').value);
-                showToast("Reset link sent to your email."); viewManager('login-view');
-            } catch (err) { showToast(err.message.replace('Firebase: ', ''), "error"); }
+                window.showToast("Reset link sent to your email."); viewManager('login-view');
+            } catch (err) { window.showToast(err.message.replace('Firebase: ', ''), "error"); }
             btn.disabled=false;
         });
 
-        document.getElementById('btn-logout').addEventListener('click', () => { signOut(auth); showToast("Logged out securely."); Modals.close('auth-overlay'); });
+        document.getElementById('btn-logout').addEventListener('click', () => { signOut(auth); window.showToast("Logged out securely."); window.Modals.close('auth-overlay'); });
 
         // Edit Profile
         document.getElementById('btn-edit-profile').addEventListener('click', () => {
@@ -1014,22 +1028,16 @@
                 const newName = document.getElementById('edit-name').value;
                 const newAvatar = document.getElementById('edit-avatar').value;
                 await updateProfile(currentUser, { displayName: newName, photoURL: newAvatar });
-                await updateDoc(doc(db, "users", currentUser.uid), { displayName: newName, photoURL: newAvatar });
-                updateProfileUI(); showToast("Profile beautifully updated! ✨");
-            } catch(err) { showToast("Error updating profile", "error"); }
+                await setDoc(doc(db, "users", currentUser.uid), { displayName: newName, photoURL: newAvatar }, { merge: true });
+                updateProfileUI(); window.showToast("Profile beautifully updated! ✨");
+            } catch(err) { window.showToast("Error updating profile", "error"); }
             btn.disabled = false;
         });
 
         // Like & Save Actions
         window.toggleLike = async (id, type, event) => {
             if(!window.requireAuth()) return;
-            if(event) {
-                const heart = document.createElement('span'); heart.className = 'material-symbols-rounded floating'; heart.innerText = 'favorite';
-                heart.style.position = 'fixed'; heart.style.left = `${event.clientX - 20}px`; heart.style.top = `${event.clientY - 20}px`;
-                heart.style.color = 'var(--primary)'; heart.style.fontSize = '2rem'; heart.style.pointerEvents = 'none'; heart.style.zIndex = '9999';
-                heart.style.animation = 'floatUpFade 1s forwards'; document.body.appendChild(heart);
-                setTimeout(() => heart.remove(), 1000);
-            }
+            if(event) window.spawnFloatingHeart(event.clientX, event.clientY);
 
             const likeRef = doc(db, "users", currentUser.uid, "likes", id);
             const mainRef = doc(db, type === 'product' ? 'products' : 'swatches', id);
@@ -1045,7 +1053,7 @@
                     btn.style.background = ''; btn.style.color = '';
                     document.getElementById(countId).innerText = parseInt(document.getElementById(countId).innerText) - 1;
                 } else {
-                    await setDoc(likeRef, { addedAt: new Date() }); await updateDoc(mainRef, { likes: increment(1) });
+                    await setDoc(likeRef, { addedAt: serverTimestamp() }); await updateDoc(mainRef, { likes: increment(1) });
                     document.getElementById(iconId).className = 'material-symbols-rounded icon-filled animate-heart';
                     btn.style.background = 'var(--primary-light)'; btn.style.color = 'var(--primary)';
                     document.getElementById(countId).innerText = parseInt(document.getElementById(countId).innerText) + 1;
@@ -1061,25 +1069,25 @@
                 const icon = document.getElementById('icon-prod-save');
                 if (snap.exists()) {
                     await deleteDoc(ref); icon.innerText = 'bookmark_border'; icon.className = 'material-symbols-rounded';
-                    showToast("Removed from Wishlist.");
+                    window.showToast("Removed from Wishlist.");
                 } else {
-                    await setDoc(ref, { addedAt: new Date() }); icon.innerText = 'bookmark'; icon.className = 'material-symbols-rounded icon-filled animate-heart';
-                    showToast("Added to Wishlist! 🎀");
+                    await setDoc(ref, { addedAt: serverTimestamp() }); icon.innerText = 'bookmark'; icon.className = 'material-symbols-rounded icon-filled animate-heart';
+                    window.showToast("Added to Wishlist! 🎀");
                 }
             } catch (err) {}
         };
 
         window.shareLink = async (url, title = 'SwatchStick') => {
             if (navigator.share) { try { await navigator.share({ title: title, url: url }); } catch(e){} } 
-            else { navigator.clipboard.writeText(url); showToast("Link copied to clipboard! ✨"); }
+            else { navigator.clipboard.writeText(url); window.showToast("Link copied to clipboard! ✨"); }
         };
 
         // Wishlist View
         const renderWishlist = async () => {
             if(!window.requireAuth()) return;
-            Modals.close('auth-overlay');
+            window.Modals.close('auth-overlay');
             const panel = document.getElementById('product-panel-content');
-            Modals.open('product-overlay');
+            window.Modals.open('product-overlay');
             panel.innerHTML = `<div class="empty-state"><p>Loading your favorites...</p></div>`;
             try {
                 const snap = await getDocs(collection(db, "users", currentUser.uid, "saved"));
@@ -1100,7 +1108,7 @@
         document.getElementById('btn-wishlist-header').addEventListener('click', renderWishlist);
         document.getElementById('btn-mobile-wishlist').addEventListener('click', renderWishlist);
 
-        document.addEventListener('keydown', (e) => { if (e.key === 'Escape') Modals.closeAll(); });
+        document.addEventListener('keydown', (e) => { if (e.key === 'Escape') window.Modals.closeAll(); });
 
         function handleDeepLinks() {
             const urlParams = new URLSearchParams(window.location.search);
