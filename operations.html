@@ -79,7 +79,6 @@
         .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
         .form-group { margin-bottom: 8px; }
         .form-group.full { grid-column: 1 / -1; }
-        .form-group.third { grid-column: span 1; } /* If changing to 3 cols */
         .form-label { display: block; margin-bottom: 8px; font-weight: 700; color: var(--text-main); font-size: 13px; text-transform: uppercase; letter-spacing: 0.05em; }
         .checkbox-label { display: flex; align-items: center; gap: 10px; cursor: pointer; font-weight: 600; padding: 12px; border: 1px solid var(--border); border-radius: var(--radius-md); background: var(--bg-body); transition: var(--transition); }
         .checkbox-label:hover { background: var(--border); }
@@ -113,6 +112,7 @@
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
         @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
         @keyframes slideInRight { from { transform: translateX(120%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+        @keyframes toastFadeOut { from { transform: translateX(0); opacity: 1; } to { transform: translateX(120%); opacity: 0; } }
     </style>
 </head>
 <body>
@@ -262,7 +262,7 @@
                 <div id="view-categories" class="view-section">
                     <div class="page-header">
                         <h2 class="page-title">Categories</h2>
-                        <button class="btn btn-primary" onclick="openModal('modal-category')"><span class="material-symbols-rounded">add</span> Add Category</button>
+                        <button class="btn btn-primary" onclick="window.openModal('modal-category')"><span class="material-symbols-rounded">add</span> Add Category</button>
                     </div>
                     <div class="card">
                         <table id="table-categories">
@@ -278,7 +278,7 @@
                 <div id="view-products" class="view-section">
                     <div class="page-header">
                         <h2 class="page-title">Products Directory</h2>
-                        <button class="btn btn-primary" onclick="openModal('modal-product')"><span class="material-symbols-rounded">add</span> Add Product</button>
+                        <button class="btn btn-primary" onclick="window.openModal('modal-product')"><span class="material-symbols-rounded">add</span> Add Product</button>
                     </div>
                     <div class="card">
                         <table id="table-products">
@@ -294,7 +294,7 @@
                 <div id="view-swatches" class="view-section">
                     <div class="page-header">
                         <h2 class="page-title">Real Swatches</h2>
-                        <button class="btn btn-primary" onclick="openModal('modal-swatch')"><span class="material-symbols-rounded">add</span> Add Swatch</button>
+                        <button class="btn btn-primary" onclick="window.openModal('modal-swatch')"><span class="material-symbols-rounded">add</span> Add Swatch</button>
                     </div>
                     <div class="card">
                         <table id="table-swatches">
@@ -317,7 +317,7 @@
         <div class="modal" style="max-width: 500px;">
             <div class="modal-header">
                 <span id="cat-modal-title">Add Category</span>
-                <button class="btn-icon" onclick="closeModal('modal-category')"><span class="material-symbols-rounded">close</span></button>
+                <button class="btn-icon" onclick="window.closeModal('modal-category')"><span class="material-symbols-rounded">close</span></button>
             </div>
             <div class="modal-body form-grid">
                 <input type="hidden" id="cat-id">
@@ -338,7 +338,7 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button class="btn btn-secondary" onclick="closeModal('modal-category')">Cancel</button>
+                <button class="btn btn-secondary" onclick="window.closeModal('modal-category')">Cancel</button>
                 <button class="btn btn-primary" id="btn-save-category">Save Category</button>
             </div>
         </div>
@@ -349,7 +349,7 @@
         <div class="modal" style="max-width: 900px;">
             <div class="modal-header">
                 <span id="prod-modal-title">Add Product</span>
-                <button class="btn-icon" onclick="closeModal('modal-product')"><span class="material-symbols-rounded">close</span></button>
+                <button class="btn-icon" onclick="window.closeModal('modal-product')"><span class="material-symbols-rounded">close</span></button>
             </div>
             <div class="modal-body form-grid">
                 <input type="hidden" id="prod-id">
@@ -415,7 +415,7 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button class="btn btn-secondary" onclick="closeModal('modal-product')">Cancel</button>
+                <button class="btn btn-secondary" onclick="window.closeModal('modal-product')">Cancel</button>
                 <button class="btn btn-primary" id="btn-save-product">Save Product</button>
             </div>
         </div>
@@ -426,7 +426,7 @@
         <div class="modal" style="max-width: 800px;">
             <div class="modal-header">
                 <span id="swatch-modal-title">Add Swatch</span>
-                <button class="btn-icon" onclick="closeModal('modal-swatch')"><span class="material-symbols-rounded">close</span></button>
+                <button class="btn-icon" onclick="window.closeModal('modal-swatch')"><span class="material-symbols-rounded">close</span></button>
             </div>
             <div class="modal-body form-grid">
                 <input type="hidden" id="swatch-id">
@@ -500,7 +500,7 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button class="btn btn-secondary" onclick="closeModal('modal-swatch')">Cancel</button>
+                <button class="btn btn-secondary" onclick="window.closeModal('modal-swatch')">Cancel</button>
                 <button class="btn btn-primary" id="btn-save-swatch">Save Swatch</button>
             </div>
         </div>
@@ -539,34 +539,36 @@
             t.className = `toast ${type}`;
             t.innerHTML = `<span class="material-symbols-rounded">${type === 'success' ? 'check_circle' : 'error'}</span> ${msg}`;
             c.appendChild(t);
-            setTimeout(() => { t.style.animation = 'fadeOut 0.3s forwards'; setTimeout(() => t.remove(), 300); }, 3000);
+            setTimeout(() => { t.style.animation = 'toastFadeOut 0.3s forwards'; setTimeout(() => t.remove(), 300); }, 3000);
         };
 
-        // Modal Helpers
-        window.openModal = (id) => {
+        // Modal Helpers (IsEdit flag prevents accidental clearing during edit load)
+        window.openModal = (id, isEdit = false) => {
             const el = document.getElementById(id);
             el.style.display = 'flex';
             setTimeout(() => el.classList.add('active'), 10);
             
-            if (id === 'modal-category') {
-                document.getElementById('cat-id').value = ''; document.getElementById('cat-name').value = ''; document.getElementById('cat-slug').value = '';
-                document.getElementById('cat-order').value = '1'; document.getElementById('cat-visible').checked = true;
-                document.getElementById('cat-modal-title').innerText = 'Add Category';
-            }
-            if (id === 'modal-product') {
-                document.getElementById('prod-id').value = ''; document.getElementById('prod-brand').value = ''; document.getElementById('prod-name').value = '';
-                document.getElementById('prod-category').value = ''; document.getElementById('prod-shade').value = ''; document.getElementById('prod-imgs').value = '';
-                document.getElementById('prod-desc').value = ''; document.getElementById('prod-price').value = ''; document.getElementById('prod-url').value = '';
-                document.getElementById('prod-likes').value = '0'; document.getElementById('prod-views').value = '0'; document.getElementById('prod-saves').value = '0';
-                document.getElementById('prod-visible').checked = true; document.getElementById('prod-trending').checked = false; document.getElementById('prod-featured').checked = false;
-                document.getElementById('prod-modal-title').innerText = 'Add Product';
-            }
-            if (id === 'modal-swatch') {
-                document.getElementById('swatch-id').value = ''; document.getElementById('swatch-product').value = ''; document.getElementById('swatch-imgs').value = '';
-                document.getElementById('swatch-shade').value = ''; document.getElementById('swatch-skin').value = ''; document.getElementById('swatch-undertone').value = '';
-                document.getElementById('swatch-light').value = ''; document.getElementById('swatch-notes').value = ''; 
-                document.getElementById('swatch-likes').value = '0'; document.getElementById('swatch-views').value = '0';
-                document.getElementById('swatch-visible').checked = true; document.getElementById('swatch-modal-title').innerText = 'Add Swatch';
+            if (!isEdit) {
+                if (id === 'modal-category') {
+                    document.getElementById('cat-id').value = ''; document.getElementById('cat-name').value = ''; document.getElementById('cat-slug').value = '';
+                    document.getElementById('cat-order').value = '1'; document.getElementById('cat-visible').checked = true;
+                    document.getElementById('cat-modal-title').innerText = 'Add Category';
+                }
+                if (id === 'modal-product') {
+                    document.getElementById('prod-id').value = ''; document.getElementById('prod-brand').value = ''; document.getElementById('prod-name').value = '';
+                    document.getElementById('prod-category').value = ''; document.getElementById('prod-shade').value = ''; document.getElementById('prod-imgs').value = '';
+                    document.getElementById('prod-desc').value = ''; document.getElementById('prod-price').value = ''; document.getElementById('prod-url').value = '';
+                    document.getElementById('prod-likes').value = '0'; document.getElementById('prod-views').value = '0'; document.getElementById('prod-saves').value = '0';
+                    document.getElementById('prod-visible').checked = true; document.getElementById('prod-trending').checked = false; document.getElementById('prod-featured').checked = false;
+                    document.getElementById('prod-modal-title').innerText = 'Add Product';
+                }
+                if (id === 'modal-swatch') {
+                    document.getElementById('swatch-id').value = ''; document.getElementById('swatch-product').value = ''; document.getElementById('swatch-imgs').value = '';
+                    document.getElementById('swatch-shade').value = ''; document.getElementById('swatch-skin').value = ''; document.getElementById('swatch-undertone').value = '';
+                    document.getElementById('swatch-light').value = ''; document.getElementById('swatch-notes').value = ''; 
+                    document.getElementById('swatch-likes').value = '0'; document.getElementById('swatch-views').value = '0';
+                    document.getElementById('swatch-visible').checked = true; document.getElementById('swatch-modal-title').innerText = 'Add Swatch';
+                }
             }
         };
 
@@ -695,7 +697,7 @@
                         <td>${data.visible ? '<span style="color:var(--success); font-weight:600;">Visible</span>' : '<span style="color:var(--danger); font-weight:600;">Hidden</span>'}</td>
                         <td class="action-btns">
                             <button class="btn-icon" onclick="window.editCategory('${d.id}')"><span class="material-symbols-rounded">edit</span></button>
-                            <button class="btn-icon" style="color:var(--danger)" onclick="window.delDoc('categories', '${d.id}', fetchCategories)"><span class="material-symbols-rounded">delete</span></button>
+                            <button class="btn-icon" style="color:var(--danger)" onclick="window.delDoc('categories', '${d.id}', 'categories')"><span class="material-symbols-rounded">delete</span></button>
                         </td>
                     </tr>`;
                 });
@@ -706,13 +708,13 @@
         window.editCategory = (id) => {
             const cat = categoriesData.find(c => c.id === id);
             if (!cat) return;
+            window.openModal('modal-category', true); // Open without wiping
             document.getElementById('cat-id').value = cat.id;
             document.getElementById('cat-name').value = cat.name || '';
             document.getElementById('cat-slug').value = cat.slug || '';
             document.getElementById('cat-order').value = cat.order || 0;
             document.getElementById('cat-visible').checked = cat.visible !== false;
             document.getElementById('cat-modal-title').innerText = 'Edit Category';
-            window.openModal('modal-category');
         };
 
         document.getElementById('btn-save-category').addEventListener('click', async () => {
@@ -766,7 +768,7 @@
                         </td>
                         <td class="action-btns">
                             <button class="btn-icon" onclick="window.editProduct('${d.id}')"><span class="material-symbols-rounded">edit</span></button>
-                            <button class="btn-icon" style="color:var(--danger)" onclick="window.delDoc('products', '${d.id}', fetchProducts)"><span class="material-symbols-rounded">delete</span></button>
+                            <button class="btn-icon" style="color:var(--danger)" onclick="window.delDoc('products', '${d.id}', 'products')"><span class="material-symbols-rounded">delete</span></button>
                         </td>
                     </tr>`;
                 });
@@ -777,6 +779,7 @@
         window.editProduct = (id) => {
             const p = productsData.find(x => x.id === id);
             if (!p) return;
+            window.openModal('modal-product', true); // Open without wiping
             document.getElementById('prod-id').value = p.id;
             document.getElementById('prod-brand').value = p.brand || '';
             document.getElementById('prod-name').value = p.name || '';
@@ -802,7 +805,6 @@
             document.getElementById('prod-featured').checked = p.featured === true;
             
             document.getElementById('prod-modal-title').innerText = 'Edit Product';
-            window.openModal('modal-product');
         };
 
         document.getElementById('btn-save-product').addEventListener('click', async () => {
@@ -839,7 +841,7 @@
                     data.swatchCount = 0; data.commentsCount = 0;
                     await addDoc(collection(db, "products"), data);
                 }
-                window.showToast("Product saved");
+                window.showToast("Product saved successfully!");
                 window.closeModal('modal-product');
                 fetchProducts();
             } catch(e) { window.showToast("Error saving product", "error"); }
@@ -877,7 +879,7 @@
                         <td>${data.visible ? '<span style="color:var(--success); font-weight:600; font-size:12px">Visible</span>' : '<span style="color:var(--danger); font-weight:600; font-size:12px">Hidden</span>'}</td>
                         <td class="action-btns">
                             <button class="btn-icon" onclick="window.editSwatch('${d.id}')"><span class="material-symbols-rounded">edit</span></button>
-                            <button class="btn-icon" style="color:var(--danger)" onclick="window.delDoc('swatches', '${d.id}', fetchSwatches)"><span class="material-symbols-rounded">delete</span></button>
+                            <button class="btn-icon" style="color:var(--danger)" onclick="window.delDoc('swatches', '${d.id}', 'swatches')"><span class="material-symbols-rounded">delete</span></button>
                         </td>
                     </tr>`;
                 });
@@ -897,6 +899,7 @@
             const s = currentSwatchesData.find(x => x.id === id);
             if(!s) return;
 
+            window.openModal('modal-swatch', true); // Open without wiping
             document.getElementById('swatch-id').value = s.id;
             document.getElementById('swatch-product').value = s.productId || '';
             document.getElementById('swatch-shade').value = s.shade || '';
@@ -915,7 +918,6 @@
 
             document.getElementById('swatch-visible').checked = s.visible !== false;
             document.getElementById('swatch-modal-title').innerText = 'Edit Swatch';
-            window.openModal('modal-swatch');
         };
 
         document.getElementById('btn-save-swatch').addEventListener('click', async () => {
@@ -951,21 +953,25 @@
                     await addDoc(collection(db, "swatches"), data);
                     await updateDoc(doc(db, "products", pId), { swatchCount: increment(1) });
                 }
-                window.showToast("Swatch saved!");
+                window.showToast("Swatch saved successfully!");
                 window.closeModal('modal-swatch');
                 await populateSwatchesData();
                 fetchSwatches();
             } catch(e) { window.showToast("Error saving swatch", "error"); }
         });
 
-        // Global Delete Helper
-        window.delDoc = async (col, id, callback) => {
+        // Global Delete Helper (fixed binding for inline string calls)
+        window.delDoc = async (col, id, fetchFnName) => {
             if (!confirm("Are you sure you want to permanently delete this?")) return;
             try {
                 await deleteDoc(doc(db, col, id));
-                window.showToast("Deleted successfully");
-                callback();
-            } catch(e) { window.showToast("Error deleting", "error"); }
+                window.showToast("Deleted successfully!");
+                
+                // Route to correct fetcher to refresh UI
+                if(fetchFnName === 'products') fetchProducts();
+                else if(fetchFnName === 'categories') fetchCategories();
+                else if(fetchFnName === 'swatches') fetchSwatches();
+            } catch(e) { window.showToast("Error deleting item", "error"); }
         };
 
     </script>
