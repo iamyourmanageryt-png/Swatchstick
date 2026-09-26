@@ -107,8 +107,8 @@
         .file-upload-box { border: 2px dashed var(--border); border-radius: var(--radius-md); padding: 24px; text-align: center; cursor: pointer; transition: 0.3s; background: #F8FAFC; }
         .file-upload-box:hover { border-color: var(--primary); background: var(--primary-light); }
         .file-upload-box input[type="file"] { display: none; }
-        .file-preview { display: flex; align-items: center; gap: 16px; margin-top: 12px; }
-        .file-preview img { width: 64px; height: 64px; border-radius: 8px; object-fit: cover; display: none; border: 1px solid var(--border); }
+        .file-preview-container { display: flex; align-items: center; gap: 12px; margin-top: 12px; flex-wrap: wrap; }
+        .img-preview-thumb { width: 64px; height: 64px; border-radius: 8px; object-fit: cover; border: 1px solid var(--border); background: white; }
 
         /* ================= MODALS & AUTH ================= */
         .modal-overlay { position: fixed; inset: 0; background: rgba(17, 24, 39, 0.7); backdrop-filter: blur(4px); display: none; align-items: center; justify-content: center; z-index: 2000; opacity: 0; transition: opacity 0.3s; padding: 16px; }
@@ -163,7 +163,10 @@
     <!-- AUTH SCREEN -->
     <div id="auth-screen">
         <div class="auth-card">
-            <span class="material-symbols-rounded" style="font-size: 56px; color: var(--primary); margin-bottom: 16px;">admin_panel_settings</span>
+            <!-- Embedded SwatchStick Logo SVG -->
+            <div style="margin-bottom: 16px; display:flex; justify-content:center;">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="80" height="80"><defs><linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#FFF5F8" /><stop offset="100%" stop-color="#FFD1DC" stop-opacity="0.5" /></linearGradient><linearGradient id="swatchGrad" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#FF80AB" /><stop offset="50%" stop-color="#D2386C" /><stop offset="100%" stop-color="#A62B55" /></linearGradient><linearGradient id="stickGrad" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#4A154B" /><stop offset="30%" stop-color="#8D5A72" /><stop offset="70%" stop-color="#8D5A72" /><stop offset="100%" stop-color="#2E0C2F" /></linearGradient><filter id="luxuryShadow" x="-20%" y="-20%" width="150%" height="150%"><feDropShadow dx="8" dy="16" stdDeviation="20" flood-color="#D2386C" flood-opacity="0.3" /></filter><filter id="stickShadow" x="-20%" y="-20%" width="150%" height="150%"><feDropShadow dx="4" dy="12" stdDeviation="12" flood-color="#4A154B" flood-opacity="0.4" /></filter></defs><rect width="512" height="512" rx="112" fill="url(#bgGrad)" /><path d="M 120 100 Q 120 130 90 130 Q 120 130 120 160 Q 120 130 150 130 Q 120 130 120 100" fill="#FF80AB" opacity="0.6" /><path d="M 420 400 Q 420 420 400 420 Q 420 420 420 440 Q 420 420 440 420 Q 420 420 420 400" fill="#D2386C" opacity="0.5" /><g filter="url(#stickShadow)"><rect x="236" y="90" width="40" height="332" rx="20" transform="rotate(45 256 256)" fill="url(#stickGrad)" /><rect x="246" y="96" width="12" height="320" rx="6" transform="rotate(45 256 256)" fill="#FFFFFF" opacity="0.25" /><rect x="240" y="100" width="4" height="312" rx="2" transform="rotate(45 256 256)" fill="#FFFFFF" opacity="0.4" /></g><g filter="url(#luxuryShadow)"><path d="M 340,160 C 340,40 172,40 172,160 C 172,270 340,242 340,352 C 340,472 172,472 172,352" fill="none" stroke="url(#swatchGrad)" stroke-width="72" stroke-linecap="round" /><path d="M 340,160 C 340,40 172,40 172,160 C 172,270 340,242 340,352 C 340,472 172,472 172,352" fill="none" stroke="#FFFFFF" stroke-width="16" stroke-linecap="round" opacity="0.55" transform="translate(-6, -10)" /><path d="M 340,160 C 340,40 172,40 172,160 C 172,270 340,242 340,352 C 340,472 172,472 172,352" fill="none" stroke="#FFFFFF" stroke-width="4" stroke-linecap="round" opacity="0.8" transform="translate(-8, -12)" /></g><path d="M 380 120 Q 380 170 330 170 Q 380 170 380 220 Q 380 170 430 170 Q 380 170 380 120" fill="#FFFFFF" filter="url(#luxuryShadow)" /><path d="M 380 140 Q 380 170 350 170 Q 380 170 380 200 Q 380 170 410 170 Q 380 170 380 140" fill="#FFD1DC" /></svg>
+            </div>
             <h1 style="font-size: 28px; font-family: serif; color: var(--text-main); margin-bottom: 8px;">SwatchOps</h1>
             <p style="color: var(--text-muted); margin-bottom: 32px;">Admin Management Portal</p>
             <button class="btn btn-primary" id="btn-one-tap" style="width: 100%;">
@@ -182,7 +185,9 @@
         <aside class="sidebar" id="sidebar">
             <div class="sidebar-header">
                 <div style="display:flex; align-items:center; gap:10px;">
-                    <span class="material-symbols-rounded" style="color: var(--primary);">auto_awesome</span> SwatchOps
+                    <!-- Embedded SwatchStick Logo SVG Small -->
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="28" height="28"><defs><linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#FFF5F8" /><stop offset="100%" stop-color="#FFD1DC" stop-opacity="0.5" /></linearGradient><linearGradient id="swatchGrad" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#FF80AB" /><stop offset="50%" stop-color="#D2386C" /><stop offset="100%" stop-color="#A62B55" /></linearGradient><linearGradient id="stickGrad" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#4A154B" /><stop offset="30%" stop-color="#8D5A72" /><stop offset="70%" stop-color="#8D5A72" /><stop offset="100%" stop-color="#2E0C2F" /></linearGradient><filter id="luxuryShadow" x="-20%" y="-20%" width="150%" height="150%"><feDropShadow dx="8" dy="16" stdDeviation="20" flood-color="#D2386C" flood-opacity="0.3" /></filter><filter id="stickShadow" x="-20%" y="-20%" width="150%" height="150%"><feDropShadow dx="4" dy="12" stdDeviation="12" flood-color="#4A154B" flood-opacity="0.4" /></filter></defs><rect width="512" height="512" rx="112" fill="url(#bgGrad)" /><path d="M 120 100 Q 120 130 90 130 Q 120 130 120 160 Q 120 130 150 130 Q 120 130 120 100" fill="#FF80AB" opacity="0.6" /><path d="M 420 400 Q 420 420 400 420 Q 420 420 420 440 Q 420 420 440 420 Q 420 420 420 400" fill="#D2386C" opacity="0.5" /><g filter="url(#stickShadow)"><rect x="236" y="90" width="40" height="332" rx="20" transform="rotate(45 256 256)" fill="url(#stickGrad)" /><rect x="246" y="96" width="12" height="320" rx="6" transform="rotate(45 256 256)" fill="#FFFFFF" opacity="0.25" /><rect x="240" y="100" width="4" height="312" rx="2" transform="rotate(45 256 256)" fill="#FFFFFF" opacity="0.4" /></g><g filter="url(#luxuryShadow)"><path d="M 340,160 C 340,40 172,40 172,160 C 172,270 340,242 340,352 C 340,472 172,472 172,352" fill="none" stroke="url(#swatchGrad)" stroke-width="72" stroke-linecap="round" /><path d="M 340,160 C 340,40 172,40 172,160 C 172,270 340,242 340,352 C 340,472 172,472 172,352" fill="none" stroke="#FFFFFF" stroke-width="16" stroke-linecap="round" opacity="0.55" transform="translate(-6, -10)" /><path d="M 340,160 C 340,40 172,40 172,160 C 172,270 340,242 340,352 C 340,472 172,472 172,352" fill="none" stroke="#FFFFFF" stroke-width="4" stroke-linecap="round" opacity="0.8" transform="translate(-8, -12)" /></g><path d="M 380 120 Q 380 170 330 170 Q 380 170 380 220 Q 380 170 430 170 Q 380 170 380 120" fill="#FFFFFF" filter="url(#luxuryShadow)" /><path d="M 380 140 Q 380 170 350 170 Q 380 170 380 200 Q 380 170 410 170 Q 380 170 380 140" fill="#FFD1DC" /></svg>
+                    SwatchOps
                 </div>
                 <button class="mobile-menu-toggle" id="btn-close-sidebar" style="color:white; font-size:24px;"><span class="material-symbols-rounded">close</span></button>
             </div>
@@ -219,7 +224,7 @@
                     </div>
                 </div>
                 <button class="btn btn-secondary" id="btn-logout" style="padding: 8px 16px;">
-                    <span class="material-symbols-rounded" style="font-size: 18px;">logout</span> <span class="hide-mobile">Exit</span>
+                    <span class="material-symbols-rounded" style="font-size: 18px;">logout</span> <span class="hide-mobile" style="display:none;">Exit</span>
                 </button>
             </header>
 
@@ -262,23 +267,26 @@
                         <button class="btn btn-primary" id="btn-save-settings"><div class="spinner"></div><span class="btn-text">Save Settings</span></button>
                     </div>
                     <div class="card">
+                        <div class="card-header">Brand Identity</div>
                         <div class="card-body form-grid" id="form-settings">
                             <div class="form-group"><label class="form-label">Brand Name</label><input type="text" id="set-brandName"></div>
                             <div class="form-group"><label class="form-label">Contact Email</label><input type="email" id="set-contactEmail"></div>
                             <div class="form-group full"><label class="form-label">Tagline / Footer Text</label><input type="text" id="set-tagline"></div>
                             
                             <div class="form-group full" style="border-top: 1px solid var(--border); padding-top: 16px;">
-                                <label class="form-label">Logo Upload</label>
+                                <label class="form-label">Logo Upload (Optional)</label>
                                 <div class="file-upload-box" onclick="document.getElementById('set-logo-file').click()">
                                     <span class="material-symbols-rounded" style="font-size:32px; color:var(--text-muted);">upload_file</span>
-                                    <p style="margin-top:8px; font-weight:600;">Click to upload Logo image</p>
+                                    <p style="margin-top:8px; font-weight:600;">Click to select Logo image</p>
                                     <input type="file" id="set-logo-file" accept="image/*">
                                 </div>
-                                <div class="file-preview"><img id="set-logo-preview"><input type="text" id="set-logoUrl" placeholder="Or paste image URL here..." style="flex:1;"></div>
+                                <div class="file-preview-container" id="set-logo-preview-container"></div>
+                                <input type="text" id="set-logoUrl" placeholder="Or paste image URL here..." style="margin-top:12px;">
                             </div>
 
                             <div class="form-group"><label class="form-label">Instagram URL</label><input type="text" id="set-instagramUrl"></div>
                             <div class="form-group"><label class="form-label">TikTok URL</label><input type="text" id="set-tiktokUrl"></div>
+                            <div class="form-group full"><label class="form-label">Pinterest URL</label><input type="text" id="set-pinterestUrl"></div>
                         </div>
                     </div>
                 </div>
@@ -299,13 +307,14 @@
                             <div class="form-group"><label class="form-label">Button Link</label><input type="text" id="hero-btnLink"></div>
                             
                             <div class="form-group full" style="border-top: 1px solid var(--border); padding-top: 16px;">
-                                <label class="form-label">Hero Main Image</label>
+                                <label class="form-label">Hero Main Image (Optional)</label>
                                 <div class="file-upload-box" onclick="document.getElementById('hero-img-file').click()">
                                     <span class="material-symbols-rounded" style="font-size:32px;">add_photo_alternate</span>
                                     <p>Upload Main Image</p>
                                     <input type="file" id="hero-img-file" accept="image/*">
                                 </div>
-                                <div class="file-preview"><img id="hero-img-preview"><input type="text" id="hero-img" placeholder="Or paste URL..." style="flex:1;"></div>
+                                <div class="file-preview-container" id="hero-img-preview-container"></div>
+                                <input type="text" id="hero-img" placeholder="Or paste URL..." style="margin-top:12px;">
                             </div>
                         </div>
                     </div>
@@ -336,7 +345,7 @@
                     <div class="card">
                         <div class="card-header">
                             Manage Products
-                            <div class="search-bar"><span class="material-symbols-rounded">search</span><input type="text" id="search-products" placeholder="Search by name or brand..."></div>
+                            <div class="search-bar"><span class="material-symbols-rounded">search</span><input type="text" id="search-products" placeholder="Search products..."></div>
                         </div>
                         <div class="table-responsive">
                             <table id="table-products">
@@ -356,7 +365,7 @@
                     <div class="card">
                         <div class="card-header">
                             Manage Swatches
-                            <div class="search-bar"><span class="material-symbols-rounded">search</span><input type="text" id="search-swatches" placeholder="Search by product..."></div>
+                            <div class="search-bar"><span class="material-symbols-rounded">search</span><input type="text" id="search-swatches" placeholder="Search swatches..."></div>
                         </div>
                         <div class="table-responsive">
                             <table id="table-swatches">
@@ -409,16 +418,14 @@
                 <div class="form-group"><label class="form-label">Shade (Optional)</label><input type="text" id="prod-shade"></div>
                 
                 <div class="form-group full" style="background:#F8FAFC; padding:16px; border-radius:12px; border:1px solid var(--border);">
-                    <label class="form-label" style="color:var(--primary);">Primary Product Image</label>
+                    <label class="form-label" style="color:var(--primary);">Product Images (Select multiple optional)</label>
                     <div class="file-upload-box" onclick="document.getElementById('prod-img-file').click()">
-                        <span class="material-symbols-rounded" style="font-size:32px;">upload</span>
-                        <p>Click to select image file</p>
-                        <input type="file" id="prod-img-file" accept="image/*">
+                        <span class="material-symbols-rounded" style="font-size:32px;">upload_file</span>
+                        <p>Click to select multiple images</p>
+                        <input type="file" id="prod-img-file" accept="image/*" multiple>
                     </div>
-                    <div class="file-preview">
-                        <img id="prod-img-preview">
-                        <input type="text" id="prod-img-url" placeholder="Or paste fallback URL here..." style="flex:1;">
-                    </div>
+                    <div class="file-preview-container" id="prod-img-preview-container"></div>
+                    <textarea id="prod-imgs" rows="2" placeholder="Or paste fallback URLs (one per line)..." style="margin-top:12px;"></textarea>
                 </div>
 
                 <div class="form-group full"><label class="form-label">Description</label><textarea id="prod-desc" rows="3"></textarea></div>
@@ -458,16 +465,14 @@
                 <div class="form-group full"><label class="form-label">Link to Product</label><select id="swatch-product" required></select></div>
                 
                 <div class="form-group full" style="background:#F8FAFC; padding:16px; border-radius:12px; border:1px solid var(--border);">
-                    <label class="form-label" style="color:var(--primary);">Upload Swatch Image</label>
+                    <label class="form-label" style="color:var(--primary);">Upload Swatch Images (Select multiple optional)</label>
                     <div class="file-upload-box" onclick="document.getElementById('swatch-img-file').click()">
                         <span class="material-symbols-rounded" style="font-size:32px;">palette</span>
-                        <p>Click to select swatch image</p>
-                        <input type="file" id="swatch-img-file" accept="image/*">
+                        <p>Click to select multiple images</p>
+                        <input type="file" id="swatch-img-file" accept="image/*" multiple>
                     </div>
-                    <div class="file-preview">
-                        <img id="swatch-img-preview">
-                        <input type="text" id="swatch-img-url" placeholder="Or paste fallback URL..." style="flex:1;">
-                    </div>
+                    <div class="file-preview-container" id="swatch-img-preview-container"></div>
+                    <textarea id="swatch-imgs" rows="2" placeholder="Or paste fallback URLs (one per line)..." style="margin-top:12px;"></textarea>
                 </div>
 
                 <div class="form-group"><label class="form-label">Shade Name</label><input type="text" id="swatch-shade"></div>
@@ -517,7 +522,6 @@
 
     <!-- ================= JAVASCRIPT ================= -->
     <script type="module">
-        // Import Storage
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
         import { getAuth, signInAnonymously, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
         import { getFirestore, collection, doc, getDoc, getDocs, setDoc, addDoc, updateDoc, deleteDoc, increment, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
@@ -552,32 +556,47 @@
             setTimeout(() => { t.style.opacity='0'; setTimeout(() => t.remove(), 300); }, 3000);
         };
 
-        // File Selection Handlers for Previews
-        const setupFileInput = (inputId, previewId, urlInputId) => {
+        // File Selection Handlers for Previews (Supports Multiple)
+        const setupMultiFileInput = (inputId, previewContainerId) => {
             const fileInput = document.getElementById(inputId);
             fileInput.addEventListener('change', (e) => {
-                const file = e.target.files[0];
-                if(file) {
+                const container = document.getElementById(previewContainerId);
+                container.innerHTML = ''; // clear old
+                Array.from(e.target.files).forEach(file => {
                     const reader = new FileReader();
                     reader.onload = (evt) => {
-                        const img = document.getElementById(previewId);
-                        img.src = evt.target.result; img.style.display = 'block';
-                        document.getElementById(urlInputId).value = ''; // clear text if file chosen
+                        const img = document.createElement('img');
+                        img.src = evt.target.result;
+                        img.className = 'img-preview-thumb';
+                        container.appendChild(img);
                     };
                     reader.readAsDataURL(file);
-                }
+                });
             });
         };
-        setupFileInput('set-logo-file', 'set-logo-preview', 'set-logoUrl');
-        setupFileInput('hero-img-file', 'hero-img-preview', 'hero-img');
-        setupFileInput('prod-img-file', 'prod-img-preview', 'prod-img-url');
-        setupFileInput('swatch-img-file', 'swatch-img-preview', 'swatch-img-url');
+        
+        setupMultiFileInput('set-logo-file', 'set-logo-preview-container');
+        setupMultiFileInput('hero-img-file', 'hero-img-preview-container');
+        setupMultiFileInput('prod-img-file', 'prod-img-preview-container');
+        setupMultiFileInput('swatch-img-file', 'swatch-img-preview-container');
 
-        // Storage Upload Helper
+        // Storage Upload Helpers
         const uploadFileToStorage = async (file, folderPath) => {
             const fileRef = ref(storage, `${folderPath}/${Date.now()}_${file.name.replace(/[^a-zA-Z0-9.]/g, '')}`);
             await uploadBytes(fileRef, file);
             return await getDownloadURL(fileRef);
+        };
+
+        const uploadMultipleFiles = async (fileList, folderPath) => {
+            const urls = [];
+            for(let i = 0; i < fileList.length; i++) {
+                const file = fileList[i];
+                const fileRef = ref(storage, `${folderPath}/${Date.now()}_${i}_${file.name.replace(/[^a-zA-Z0-9.]/g, '')}`);
+                await uploadBytes(fileRef, file);
+                const url = await getDownloadURL(fileRef);
+                urls.push(url);
+            }
+            return urls;
         };
 
         const setLoading = (btnId, isLoading) => {
@@ -594,7 +613,7 @@
             if (!isEdit) { // Reset Form
                 el.querySelectorAll('input[type="text"], input[type="number"], textarea, select, input[type="file"]').forEach(i => i.value = '');
                 el.querySelectorAll('input[type="checkbox"]').forEach(i => i.checked = true);
-                el.querySelectorAll('img').forEach(img => { img.src = ''; img.style.display = 'none'; });
+                el.querySelectorAll('.file-preview-container').forEach(c => c.innerHTML = '');
                 
                 if (id === 'modal-category') { document.getElementById('cat-order').value = '1'; document.getElementById('cat-modal-title').innerText = 'Add Category'; }
                 if (id === 'modal-product') { document.getElementById('prod-likes').value='0'; document.getElementById('prod-views').value='0'; document.getElementById('prod-modal-title').innerText='Add Product'; document.getElementById('prod-trending').checked=false; document.getElementById('prod-featured').checked=false;}
@@ -667,7 +686,9 @@
                     document.getElementById('set-instagramUrl').value = d.instagramUrl || '';
                     document.getElementById('set-tiktokUrl').value = d.tiktokUrl || '';
                     document.getElementById('set-pinterestUrl').value = d.pinterestUrl || '';
-                    if(d.logoUrl) { document.getElementById('set-logo-preview').src = d.logoUrl; document.getElementById('set-logo-preview').style.display = 'block'; }
+                    if(d.logoUrl) { 
+                        document.getElementById('set-logo-preview-container').innerHTML = `<img src="${d.logoUrl}" class="img-preview-thumb">`; 
+                    }
                 }
             } catch(e) {}
         }
@@ -676,16 +697,21 @@
             try {
                 let logoFinalUrl = document.getElementById('set-logoUrl').value;
                 const fileInput = document.getElementById('set-logo-file');
-                if(fileInput.files.length > 0) { logoFinalUrl = await uploadFileToStorage(fileInput.files[0], 'brand'); }
+                if(fileInput.files.length > 0) { 
+                    logoFinalUrl = await uploadFileToStorage(fileInput.files[0], 'brand'); 
+                }
 
                 await setDoc(doc(db, "siteSettings", "general"), {
-                    brandName: document.getElementById('set-brandName').value, contactEmail: document.getElementById('set-contactEmail').value,
-                    tagline: document.getElementById('set-tagline').value, logoUrl: logoFinalUrl,
-                    instagramUrl: document.getElementById('set-instagramUrl').value, tiktokUrl: document.getElementById('set-tiktokUrl').value,
-                    pinterestUrl: document.getElementById('set-pinterestUrl').value
+                    brandName: document.getElementById('set-brandName').value || "", 
+                    contactEmail: document.getElementById('set-contactEmail').value || "",
+                    tagline: document.getElementById('set-tagline').value || "", 
+                    logoUrl: logoFinalUrl || "",
+                    instagramUrl: document.getElementById('set-instagramUrl').value || "", 
+                    tiktokUrl: document.getElementById('set-tiktokUrl').value || "",
+                    pinterestUrl: document.getElementById('set-pinterestUrl').value || ""
                 }, { merge: true });
-                window.showToast("Settings saved successfully!"); fileInput.value = ''; // reset file
-            } catch(e) { window.showToast("Error saving", "error"); }
+                window.showToast("Settings saved successfully!"); fileInput.value = '';
+            } catch(e) { console.error(e); window.showToast("Image upload failed. Check Firebase Storage rules.", "error"); }
             setLoading('btn-save-settings', false);
         });
 
@@ -699,8 +725,10 @@
                     document.getElementById('hero-eyebrow').value = d.eyebrow || ''; document.getElementById('hero-title').value = d.title || '';
                     document.getElementById('hero-desc').value = d.description || ''; document.getElementById('hero-btnText').value = d.buttonText || '';
                     document.getElementById('hero-btnLink').value = d.buttonLink || '';
-                    document.getElementById('hero-img').value = d.imageUrl || ''; document.getElementById('hero-secImg').value = d.secondaryImageUrl || '';
-                    if(d.imageUrl) { document.getElementById('hero-img-preview').src = d.imageUrl; document.getElementById('hero-img-preview').style.display = 'block'; }
+                    document.getElementById('hero-img').value = d.imageUrl || ''; 
+                    if(d.imageUrl) { 
+                        document.getElementById('hero-img-preview-container').innerHTML = `<img src="${d.imageUrl}" class="img-preview-thumb">`; 
+                    }
                 }
             } catch(e) {}
         }
@@ -712,13 +740,13 @@
                 if(fileInput.files.length > 0) { imgFinalUrl = await uploadFileToStorage(fileInput.files[0], 'hero'); }
 
                 await setDoc(doc(db, "homepage", "hero"), {
-                    enabled: document.getElementById('hero-enabled').checked, eyebrow: document.getElementById('hero-eyebrow').value,
-                    title: document.getElementById('hero-title').value, description: document.getElementById('hero-desc').value,
-                    buttonText: document.getElementById('hero-btnText').value, buttonLink: document.getElementById('hero-btnLink').value,
-                    imageUrl: imgFinalUrl, secondaryImageUrl: document.getElementById('hero-secImg').value
+                    enabled: document.getElementById('hero-enabled').checked, eyebrow: document.getElementById('hero-eyebrow').value || "",
+                    title: document.getElementById('hero-title').value || "", description: document.getElementById('hero-desc').value || "",
+                    buttonText: document.getElementById('hero-btnText').value || "", buttonLink: document.getElementById('hero-btnLink').value || "",
+                    imageUrl: imgFinalUrl || ""
                 }, { merge: true });
                 window.showToast("Hero section saved!"); fileInput.value = '';
-            } catch(e) { window.showToast("Error saving", "error"); }
+            } catch(e) { console.error(e); window.showToast("Image upload failed. Check Firebase Storage rules.", "error"); }
             setLoading('btn-save-hero', false);
         });
 
@@ -730,13 +758,15 @@
                 snap.forEach(d => {
                     const data = d.data(); categoriesData.push({id: d.id, ...data});
                     html += `<tr>
-                        <td style="font-weight:700;">${data.name || 'Unnamed'}</td><td style="color:var(--text-muted)">${data.slug || ''}</td>
-                        <td><span style="background:var(--bg-body); padding:4px 12px; border-radius:12px;">${data.order || 0}</span></td>
-                        <td>${data.visible ? '<span style="color:var(--success); font-weight:700;">Visible</span>' : '<span style="color:var(--danger); font-weight:700;">Hidden</span>'}</td>
+                        <td style="font-weight:700; font-size:15px; color:var(--primary-hover)">${data.name || 'Unnamed'}</td>
+                        <td style="color:var(--text-muted)">${data.slug || ''}</td>
+                        <td><span style="background:var(--bg-body); padding:4px 12px; border-radius:12px; font-weight:600;">${data.order || 0}</span></td>
+                        <td>${data.visible ? '<span style="color:var(--success); font-weight:600;">Visible</span>' : '<span style="color:var(--danger); font-weight:600;">Hidden</span>'}</td>
                         <td class="action-btns">
                             <button class="btn-icon" onclick="window.editCategory('${d.id}')"><span class="material-symbols-rounded">edit</span></button>
                             <button class="btn-icon" style="color:var(--danger)" onclick="window.delDoc('categories', '${d.id}', 'categories')"><span class="material-symbols-rounded">delete</span></button>
-                        </td></tr>`;
+                        </td>
+                    </tr>`;
                 });
                 document.querySelector('#table-categories tbody').innerHTML = html;
             } catch(e) {}
@@ -751,11 +781,11 @@
         document.getElementById('btn-save-category').addEventListener('click', async () => {
             setLoading('btn-save-category', true);
             const id = document.getElementById('cat-id').value;
-            const data = { name: document.getElementById('cat-name').value, slug: document.getElementById('cat-slug').value, order: parseInt(document.getElementById('cat-order').value) || 0, visible: document.getElementById('cat-visible').checked };
+            const data = { name: document.getElementById('cat-name').value || "", slug: document.getElementById('cat-slug').value || "", order: parseInt(document.getElementById('cat-order').value) || 0, visible: document.getElementById('cat-visible').checked };
             try {
                 if (id) await updateDoc(doc(db, "categories", id), data); else await addDoc(collection(db, "categories"), data);
                 window.showToast("Category saved"); window.closeModal('modal-category'); fetchCategories();
-            } catch(e) { window.showToast("Error saving", "error"); }
+            } catch(e) { console.error(e); window.showToast("Error saving", "error"); }
             setLoading('btn-save-category', false);
         });
 
@@ -806,9 +836,19 @@
             document.getElementById('prod-shade').value = p.shade || ''; document.getElementById('prod-desc').value = p.description || '';
             document.getElementById('prod-price').value = p.price || ''; document.getElementById('prod-url').value = p.productUrl || '';
             
-            const imgUrl = (p.imageUrls && p.imageUrls.length > 0) ? p.imageUrls[0] : (p.imageUrl || '');
-            document.getElementById('prod-img-url').value = imgUrl;
-            if(imgUrl) { document.getElementById('prod-img-preview').src = imgUrl; document.getElementById('prod-img-preview').style.display = 'block'; }
+            let urlsText = '';
+            if(p.imageUrls && p.imageUrls.length > 0) urlsText = p.imageUrls.join('\n');
+            else if(p.imageUrl) urlsText = p.imageUrl;
+            document.getElementById('prod-imgs').value = urlsText;
+
+            // Generate Previews
+            const previewContainer = document.getElementById('prod-img-preview-container');
+            previewContainer.innerHTML = '';
+            if(p.imageUrls && p.imageUrls.length > 0) {
+                p.imageUrls.forEach(url => previewContainer.innerHTML += `<img src="${url}" class="img-preview-thumb">`);
+            } else if(p.imageUrl) {
+                previewContainer.innerHTML = `<img src="${p.imageUrl}" class="img-preview-thumb">`;
+            }
             
             document.getElementById('prod-likes').value = p.likes || 0; document.getElementById('prod-views').value = p.views || 0;
             document.getElementById('prod-visible').checked = p.visible !== false; document.getElementById('prod-trending').checked = p.trending === true; document.getElementById('prod-featured').checked = p.featured === true;
@@ -819,16 +859,27 @@
             setLoading('btn-save-product', true);
             const id = document.getElementById('prod-id').value;
             
-            let imgFinalUrl = document.getElementById('prod-img-url').value;
+            let uploadedUrls = [];
             const fileInput = document.getElementById('prod-img-file');
-            if(fileInput.files.length > 0) { imgFinalUrl = await uploadFileToStorage(fileInput.files[0], 'products'); }
+            try {
+                if(fileInput.files.length > 0) { 
+                    uploadedUrls = await uploadMultipleFiles(fileInput.files, 'products'); 
+                }
+            } catch(e) {
+                console.error(e); window.showToast("Image upload failed. Check Firebase Storage rules.", "error");
+                setLoading('btn-save-product', false); return;
+            }
+
+            const rawUrls = document.getElementById('prod-imgs').value.split('\n').map(u=>u.trim()).filter(u=>u!=='');
+            const finalImageUrls = [...rawUrls, ...uploadedUrls];
+            const primaryImg = finalImageUrls.length > 0 ? finalImageUrls[0] : '';
 
             const data = {
-                brand: document.getElementById('prod-brand').value, name: document.getElementById('prod-name').value,
-                category: document.getElementById('prod-category').value, shade: document.getElementById('prod-shade').value,
-                imageUrls: imgFinalUrl ? [imgFinalUrl] : [], imageUrl: imgFinalUrl,
-                description: document.getElementById('prod-desc').value, price: document.getElementById('prod-price').value,
-                productUrl: document.getElementById('prod-url').value,
+                brand: document.getElementById('prod-brand').value || "", name: document.getElementById('prod-name').value || "",
+                category: document.getElementById('prod-category').value || "", shade: document.getElementById('prod-shade').value || "",
+                imageUrls: finalImageUrls, imageUrl: primaryImg,
+                description: document.getElementById('prod-desc').value || "", price: document.getElementById('prod-price').value || "",
+                productUrl: document.getElementById('prod-url').value || "",
                 likes: parseInt(document.getElementById('prod-likes').value) || 0, views: parseInt(document.getElementById('prod-views').value) || 0,
                 visible: document.getElementById('prod-visible').checked, trending: document.getElementById('prod-trending').checked, featured: document.getElementById('prod-featured').checked,
                 updatedAt: serverTimestamp()
@@ -837,8 +888,8 @@
             try {
                 if (id) { await updateDoc(doc(db, "products", id), data); } 
                 else { data.createdAt = serverTimestamp(); data.swatchCount = 0; await addDoc(collection(db, "products"), data); }
-                window.showToast("Product saved successfully!"); window.closeModal('modal-product'); fetchProducts(); fileInput.value = '';
-            } catch(e) { window.showToast("Error saving product", "error"); }
+                window.showToast("Product saved successfully!"); window.closeModal('modal-product'); fetchProducts(); fetchDashboardStats(); fileInput.value = '';
+            } catch(e) { console.error(e); window.showToast("Error saving product", "error"); }
             setLoading('btn-save-product', false);
         });
 
@@ -893,9 +944,18 @@
             document.getElementById('swatch-undertone').value = s.undertone || ''; document.getElementById('swatch-light').value = s.lighting || '';
             document.getElementById('swatch-notes').value = s.notes || '';
             
-            const imgUrl = (s.imageUrls && s.imageUrls.length > 0) ? s.imageUrls[0] : (s.imageUrl || '');
-            document.getElementById('swatch-img-url').value = imgUrl;
-            if(imgUrl) { document.getElementById('swatch-img-preview').src = imgUrl; document.getElementById('swatch-img-preview').style.display = 'block'; }
+            let urlsText = '';
+            if(s.imageUrls && s.imageUrls.length > 0) urlsText = s.imageUrls.join('\n');
+            else if(s.imageUrl) urlsText = s.imageUrl;
+            document.getElementById('swatch-imgs').value = urlsText;
+
+            const previewContainer = document.getElementById('swatch-img-preview-container');
+            previewContainer.innerHTML = '';
+            if(s.imageUrls && s.imageUrls.length > 0) {
+                s.imageUrls.forEach(url => previewContainer.innerHTML += `<img src="${url}" class="img-preview-thumb">`);
+            } else if(s.imageUrl) {
+                previewContainer.innerHTML = `<img src="${s.imageUrl}" class="img-preview-thumb">`;
+            }
 
             document.getElementById('swatch-likes').value = s.likes || 0; document.getElementById('swatch-views').value = s.views || 0;
             document.getElementById('swatch-visible').checked = s.visible !== false; document.getElementById('swatch-modal-title').innerText = 'Edit Swatch';
@@ -908,24 +968,38 @@
             
             setLoading('btn-save-swatch', true);
 
-            let imgFinalUrl = document.getElementById('swatch-img-url').value;
+            let uploadedUrls = [];
             const fileInput = document.getElementById('swatch-img-file');
-            if(fileInput.files.length > 0) { imgFinalUrl = await uploadFileToStorage(fileInput.files[0], 'swatches'); }
+            try {
+                if(fileInput.files.length > 0) { uploadedUrls = await uploadMultipleFiles(fileInput.files, 'swatches'); }
+            } catch(e) {
+                console.error(e); window.showToast("Image upload failed. Check Firebase Storage rules.", "error");
+                setLoading('btn-save-swatch', false); return;
+            }
+
+            const rawUrls = document.getElementById('swatch-imgs').value.split('\n').map(u=>u.trim()).filter(u=>u!=='');
+            const finalImageUrls = [...rawUrls, ...uploadedUrls];
+            const primaryImg = finalImageUrls.length > 0 ? finalImageUrls[0] : '';
 
             const data = {
-                productId: pId, imageUrls: imgFinalUrl ? [imgFinalUrl] : [], imageUrl: imgFinalUrl,
-                shade: document.getElementById('swatch-shade').value, skinTone: document.getElementById('swatch-skin').value,
-                undertone: document.getElementById('swatch-undertone').value, lighting: document.getElementById('swatch-light').value,
-                notes: document.getElementById('swatch-notes').value,
+                productId: pId, imageUrls: finalImageUrls, imageUrl: primaryImg,
+                shade: document.getElementById('swatch-shade').value || "", skinTone: document.getElementById('swatch-skin').value || "",
+                undertone: document.getElementById('swatch-undertone').value || "", lighting: document.getElementById('swatch-light').value || "",
+                notes: document.getElementById('swatch-notes').value || "",
                 likes: parseInt(document.getElementById('swatch-likes').value) || 0, views: parseInt(document.getElementById('swatch-views').value) || 0,
                 visible: document.getElementById('swatch-visible').checked, updatedAt: serverTimestamp()
             };
 
             try {
-                if(id) { await updateDoc(doc(db, "swatches", id), data); } 
-                else { data.createdAt = serverTimestamp(); await addDoc(collection(db, "swatches"), data); await updateDoc(doc(db, "products", pId), { swatchCount: increment(1) }); }
+                if(id) {
+                    await updateDoc(doc(db, "swatches", id), data);
+                } else {
+                    data.createdAt = serverTimestamp();
+                    await addDoc(collection(db, "swatches"), data);
+                    await updateDoc(doc(db, "products", pId), { swatchCount: increment(1) });
+                }
                 window.showToast("Swatch saved successfully!"); window.closeModal('modal-swatch'); fetchSwatches(); fetchDashboardStats(); fileInput.value = '';
-            } catch(e) { window.showToast("Error saving swatch", "error"); }
+            } catch(e) { console.error(e); window.showToast("Error saving swatch", "error"); }
             setLoading('btn-save-swatch', false);
         });
 
@@ -938,7 +1012,7 @@
                 if(fetchFnName === 'products') { await fetchProducts(); fetchDashboardStats(); }
                 else if(fetchFnName === 'categories') { await fetchCategories(); fetchDashboardStats(); }
                 else if(fetchFnName === 'swatches') { await fetchSwatches(); fetchDashboardStats(); }
-            } catch(e) { window.showToast("Error deleting item", "error"); }
+            } catch(e) { console.error(e); window.showToast("Error deleting item", "error"); }
         };
 
     </script>
